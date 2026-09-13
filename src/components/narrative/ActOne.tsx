@@ -82,9 +82,17 @@ export function ActOne() {
           )
           .to({}, { duration: 0.5 })
           // State 3: the frame pulls back and the question lands.
+          // Desktop only: the stage recedes so the question takes the frame.
+          // Stacked on mobile there is nothing to hand focus to, and fading it
+          // would leave the 4-MONTHS readout unreadable.
           .to(
             ".a1-stage",
-            { opacity: 0.32, scale: 0.94, duration: 0.8, ease: "power2.inOut" },
+            {
+              opacity: isDesktop ? 0.32 : 1,
+              scale: isDesktop ? 0.94 : 1,
+              duration: 0.8,
+              ease: "power2.inOut",
+            },
             "wide",
           )
           .to(".a1-question", { opacity: 1, y: 0, duration: 0.8 }, "wide+=0.15")

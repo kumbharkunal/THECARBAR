@@ -63,9 +63,13 @@ Art direction for all of them: premium automotive campaign, realistic, India-com
 restrained lighting, clean composition, generous negative space, **no embedded text,
 no watermarks, no third-party brand logos, no invented dealership signage.**
 
-Generation prompts for 01–06 are in the client brief (§38) if stock or commissioned
-photography is not available. If generated images are used, they are illustrative
-only and must not be captioned as real customers or deliveries.
+**Copy-paste generation prompts live in `IMAGE-PROMPTS.md`** — one block per image,
+each stating its filename, exact pixel dimensions and `.webp`. Note that the brief's
+original prompts specified a dark charcoal environment; those are superseded, since
+the page is now white and green and dark images would read as holes in it.
+
+If generated images are used they are illustrative only and must never be captioned
+as real customers or deliveries.
 
 ## 4. Instagram reels
 

@@ -91,7 +91,14 @@ export function ActTwo() {
         const match = scope.querySelector(".net-desktop .net-match");
 
         // Nothing is revealed until the lens gets there.
-        gsap.set(lens, { x: SWEEP[0].x, y: SWEEP[0].y, scale: 0 });
+        gsap.set(lens, {
+          x: SWEEP[0].x,
+          y: SWEEP[0].y,
+          scale: 0,
+          // The magnifier group's bbox includes its handle; without this it
+          // would scale about that offset centre and drift off the mask.
+          transformOrigin: "0px 0px",
+        });
         gsap.set(labels, { opacity: 0 });
         gsap.set(nodes, { opacity: 0, scale: 0.4, transformOrigin: "center" });
         gsap.set(paths, { opacity: 0 });
@@ -249,34 +256,52 @@ export function ActTwo() {
       aria-labelledby="act-two-title"
       className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-paper py-20 md:py-24 lg:pb-10 lg:pt-28"
     >
-      <div className="shell w-full">
+      <div className="flex w-full flex-col shell">
         <h2 id="act-two-title" className="sr-only">
           How THE CAR-BAR checks its authorised seller network
         </h2>
 
-        {/* Captions. On desktop they crossfade in place; below lg they stack. */}
-        <div className="relative mx-auto max-w-2xl text-center lg:h-[8.5rem]">
-          {BEATS.map((beat) => (
+        {/*
+          Desktop: the beats crossfade in place above the network, one at a time.
+          Mobile: the network comes first to anchor the story, and the beats read
+          as a compact numbered sequence — six full-size headings in a column was
+          a wall of text.
+        */}
+        <div className="relative order-2 mx-auto w-full max-w-2xl lg:order-1 lg:h-[8.5rem] lg:text-center">
+          {BEATS.map((beat, i) => (
             <div
               key={beat.id}
               data-beat={beat.id}
-              className="mb-9 last:mb-0 lg:absolute lg:inset-x-0 lg:top-0 lg:mb-0"
+              className="grid grid-cols-[auto_1fr] gap-x-4 border-t border-line py-5 first:border-t-0 lg:absolute lg:inset-x-0 lg:top-0 lg:block lg:border-0 lg:py-0"
             >
-              <p className="label-mono flex items-center justify-center gap-2.5 text-green-deep">
-                <span aria-hidden className="inline-block h-px w-6 bg-green" />
-                {beat.eyebrow}
-              </p>
-              <h3 className="display-md mt-3.5 uppercase text-ink">{beat.title}</h3>
-              <p className="mx-auto mt-3.5 max-w-xl text-[1rem] leading-relaxed text-ink-soft sm:text-[0.95rem]">
-                {beat.body}
-              </p>
+              <span
+                aria-hidden
+                className="font-mono text-[0.68rem] leading-6 tracking-[0.12em] text-green-deep lg:hidden"
+              >
+                0{i + 1}
+              </span>
+              <div className="min-w-0">
+                <p className="label-mono flex items-center gap-2.5 text-green-deep lg:justify-center">
+                  <span
+                    aria-hidden
+                    className="hidden h-px w-6 bg-green lg:inline-block"
+                  />
+                  {beat.eyebrow}
+                </p>
+                <h3 className="mt-2 font-display text-[1.35rem] uppercase leading-[1.1] tracking-tight text-ink sm:text-[1.5rem] lg:display-md lg:mt-3.5">
+                  {beat.title}
+                </h3>
+                <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-soft lg:mx-auto lg:mt-3.5">
+                  {beat.body}
+                </p>
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="relative mt-8 lg:mt-4">
+        <div className="relative order-1 lg:order-2 lg:mt-4">
           <NetworkGraph className="hidden h-[min(50vh,466px)] lg:block" />
-          <NetworkGraphMobile className="h-[min(60vh,440px)] lg:hidden" />
+          <NetworkGraphMobile className="mb-10 h-[min(52vh,400px)] lg:mb-0 lg:hidden" />
 
           {/* Match detail — mirrors the requirement, confirmed against a seller. */}
           <div className="a2-match-card lift mx-auto mt-6 w-full max-w-sm rounded-2xl border border-green-line bg-paper p-5 lg:absolute lg:bottom-2 lg:right-0 lg:mt-0">

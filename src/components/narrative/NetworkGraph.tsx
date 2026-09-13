@@ -30,6 +30,7 @@ export function NetworkGraph({ className }: { className?: string }) {
       viewBox={`0 0 ${STAGE.width} ${STAGE.height}`}
       preserveAspectRatio="xMidYMid meet"
       aria-hidden
+      style={{ overflow: "visible" }}
       className={cn("net-desktop w-full", className)}
     >
       <defs>
@@ -204,22 +205,47 @@ export function NetworkGraph({ className }: { className?: string }) {
         </text>
       </g>
 
-      {/* ---- the lens ring, travelling with the mask ---- */}
+      {/*
+        The travelling magnifier. Built at unit scale (glass r=1 centred on the
+        origin) so the same x/y/scale tween drives both this and the mask circle
+        above — the glass and the revealed area stay exactly aligned. Strokes are
+        non-scaling so the instrument stays crisp at any sweep radius.
+      */}
       <g className="net-lens" opacity="0">
-        <circle
-          className="lens-follow"
-          cx="0"
-          cy="0"
-          r="1"
-          fill="none"
-          stroke="#45a117"
-          strokeOpacity="0.5"
-          strokeWidth="1.25"
-          strokeDasharray="5 7"
-          vectorEffect="non-scaling-stroke"
-        />
+        <g className="lens-follow">
+          <path
+            d="M 0.7071 0.7071 L 1.5 1.5"
+            stroke="#2f7510"
+            strokeOpacity="0.65"
+            strokeWidth="7"
+            strokeLinecap="round"
+            fill="none"
+            vectorEffect="non-scaling-stroke"
+          />
+          <circle cx="0" cy="0" r="1" fill="#45a117" fillOpacity="0.045" />
+          <circle
+            cx="0"
+            cy="0"
+            r="1"
+            fill="none"
+            stroke="#45a117"
+            strokeOpacity="0.7"
+            strokeWidth="2.5"
+            vectorEffect="non-scaling-stroke"
+          />
+          <circle
+            cx="0"
+            cy="0"
+            r="0.9"
+            fill="none"
+            stroke="#45a117"
+            strokeOpacity="0.22"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+        </g>
       </g>
-    </svg>
+      </svg>
   );
 }
 

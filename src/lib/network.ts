@@ -49,13 +49,15 @@ export const MATCH_NODE = SELLERS.find((s) => s.id === MATCH_ID)!;
 /**
  * Lens waypoints across the field, ending on the match.
  * Radius widens mid-sweep (searching) then tightens on the lock (found).
+ * Keep radii <= ~110: the magnifier's handle reaches about 1.5x the glass radius
+ * down-right, so anything larger pushes the instrument off the 1200x480 stage.
  */
 export const SWEEP = [
-  { x: 700, y: 130, r: 130 },
-  { x: 920, y: 240, r: 145 },
-  { x: 680, y: 260, r: 150 },
-  { x: 780, y: 400, r: 135 },
-  { x: MATCH_NODE.x, y: MATCH_NODE.y, r: 92 },
+  { x: 700, y: 150, r: 95 },
+  { x: 900, y: 235, r: 105 },
+  { x: 680, y: 255, r: 108 },
+  { x: 780, y: 330, r: 95 },
+  { x: MATCH_NODE.x, y: MATCH_NODE.y, r: 76 },
 ] as const;
 
 /** Straight hub→seller connectors; curvature is added in the path builder. */

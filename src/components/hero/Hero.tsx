@@ -41,7 +41,7 @@ export function Hero() {
     <section
       ref={root}
       id="top"
-      className="relative isolate overflow-hidden bg-paper pt-28 pb-16 md:pt-36 md:pb-24"
+      className="relative isolate overflow-hidden bg-paper pt-24 pb-12 md:pt-28 md:pb-16"
     >
       {/* A single soft green wash gives the white hero depth without a dark ground. */}
       <div
@@ -52,10 +52,10 @@ export function Hero() {
       {/* The lens: the logo's magnifying glass, established here before it searches. */}
       <div
         aria-hidden
-        className="hero-lens pointer-events-none absolute right-[-24%] top-[26%] -z-10 w-[80vw] max-w-[900px] -translate-y-1/2 md:right-[-6%] md:top-1/2 md:w-[52vw]"
+        className="hero-lens pointer-events-none absolute right-[-18%] top-[24%] -z-10 w-[74vw] max-w-[760px] -translate-y-1/2 md:right-[-2%] md:top-1/2 md:w-[46vw]"
       >
         {/* Opacity lives on the inner node so the .hero-lens tween never pins it. */}
-        <div className="opacity-40 md:opacity-90">
+        <div className="opacity-50 md:opacity-100">
           <LensMark />
         </div>
       </div>
@@ -66,7 +66,7 @@ export function Hero() {
           <span>{SITE.serviceArea}</span>
         </p>
 
-        <h1 className="display-xl mt-7 max-w-[15ch] uppercase text-ink md:mt-8">
+        <h1 className="display-xl mt-5 max-w-[15ch] uppercase text-ink md:mt-6">
           {["No waiting", "on your", "dream car."].map((line) => (
             <span key={line} className="block overflow-hidden pb-[0.08em]">
               <span className="hero-line block">{line}</span>
@@ -74,14 +74,14 @@ export function Hero() {
           ))}
         </h1>
 
-        <p className="hero-support body-lg mt-7 max-w-xl text-ink-soft md:mt-9">
+        <p className="hero-support body-lg mt-5 max-w-xl text-ink-soft md:mt-6">
           Told there&apos;s a long waiting period on the car you want? Tell us what
           you&apos;re looking for. THE CAR-BAR checks availability across its
           authorised seller network and helps coordinate the next step — subject
           to availability.
         </p>
 
-        <div className="hero-actions mt-9 flex flex-wrap items-center gap-3 md:mt-11">
+        <div className="hero-actions mt-7 flex flex-wrap items-center gap-3 md:mt-8">
           <Button
             href={FIND_MY_CAR_HREF}
             external
@@ -102,7 +102,7 @@ export function Hero() {
           </Button>
         </div>
 
-        <div className="hero-meta rule-line mt-14 flex flex-wrap gap-x-8 gap-y-3 pt-6 md:mt-20 md:gap-x-10">
+        <div className="hero-meta rule-line mt-10 flex flex-wrap gap-x-8 gap-y-2.5 pt-5 md:mt-12 md:gap-x-10">
           {[
             "You tell us the car",
             "We check the network",
