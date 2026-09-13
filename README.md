@@ -36,7 +36,7 @@ says "we search for your car", so the lens became the page's single signature de
 
 | Section | What the lens does |
 |---|---|
-| Hero | At rest — the instrument, established |
+| Hero | Cars pass through the glass — you look *through* the lens at what we search for |
 | Act I | Closes in on one local showroom, finds a 4-month wait, pulls back |
 | Act II | Sweeps the authorised-seller network, igniting nodes as it passes, then locks onto a match |
 | Final CTA | Contracts onto **FIND MY CAR**, closing the loop the hero opened |
@@ -82,6 +82,10 @@ supplied logo. Two contrast facts drive the whole palette:
 
 Type: **Bricolage Grotesque** (display) · **Instrument Sans** (body) ·
 **Geist Mono** (technical labels). The scrollbar is themed green over a tinted track.
+
+Display leading opens up below `md`: tight `0.96` flatters a one-line desktop
+headline, but the same heading wraps to three or four lines on a phone where the
+lines then nearly collide. Mono labels have a 12px floor on mobile for the same reason.
 
 ### Navigation
 

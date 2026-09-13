@@ -42,3 +42,7 @@ next-env.d.ts
 
 # QA artefacts
 /qa/shots/
+
+# Source car photography (13.8MB of PNGs). The optimised .webp in
+# public/media/cars/ are what ship; keep your own copy of these originals.
+/cars/

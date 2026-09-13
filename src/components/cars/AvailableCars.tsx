@@ -68,7 +68,7 @@ export function AvailableCars() {
                   ["Colour", car.colour],
                 ].map(([label, value]) => (
                   <div key={label}>
-                    <dt className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-ink-soft">
+                    <dt className="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-soft sm:text-[0.6rem] sm:tracking-[0.1em]">
                       {label}
                     </dt>
                     <dd className="mt-0.5 text-[0.82rem] text-ink">{value}</dd>

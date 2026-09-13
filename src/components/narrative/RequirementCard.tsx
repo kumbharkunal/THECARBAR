@@ -27,7 +27,7 @@ export function RequirementCard({ className }: { className?: string }) {
             key={row.label}
             className="flex items-baseline justify-between gap-4 border-b border-line-soft pb-2.5 last:border-0 last:pb-0"
           >
-            <dt className="font-mono text-[0.62rem] uppercase tracking-[0.12em] text-ink-soft">
+            <dt className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-ink-soft sm:text-[0.62rem] sm:tracking-[0.12em]">
               {row.label}
             </dt>
             <dd className="text-right text-sm font-medium text-ink">

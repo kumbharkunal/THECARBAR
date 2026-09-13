@@ -103,10 +103,13 @@ export function Header() {
     <>
       <header
         className={cn(
-          "fixed left-1/2 top-3 z-50 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full py-1.5 pl-4 pr-1.5 transition-all duration-500 md:top-4 md:pl-5",
+          "fixed left-1/2 top-3 z-50 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full py-1.5 pl-4 pr-1.5 md:top-4 md:pl-5",
+          "border backdrop-blur-2xl backdrop-saturate-[1.8] transition-[background-color,border-color,box-shadow] duration-500",
+          // An inner top highlight is what sells glass; the ring is the green edge.
+          "shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]",
           grounded
-            ? "border border-green-line/80 bg-white/80 backdrop-blur-xl backdrop-saturate-150 lift"
-            : "border border-transparent bg-white/40 backdrop-blur-md",
+            ? "border-green/35 bg-white/55 lift"
+            : "border-green/20 bg-white/35",
         )}
       >
         <a
@@ -200,10 +203,14 @@ export function Header() {
         inert={!open}
         className={cn(
           "fixed inset-0 z-[45] flex flex-col justify-between gap-8 bg-paper px-[clamp(1.15rem,4.5vw,4.5rem)] pb-[calc(2rem+env(safe-area-inset-bottom))] pt-[calc(var(--nav-h)+2.5rem)] lg:hidden",
-          "[transition:clip-path_620ms_cubic-bezier(0.16,1,0.3,1),visibility_0s_linear_620ms]",
+          // No `visibility` transition here. Two competing transition declarations
+          // were racing and the delayed one won, so the panel stayed hidden for the
+          // whole sweep and then popped in — which read as the menu being slow.
+          // `inert` already blocks focus and interaction, so opacity is enough.
+          "transition-[clip-path,opacity] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
           open
-            ? "visible [clip-path:inset(0_0_0%_0)] [transition:clip-path_620ms_cubic-bezier(0.16,1,0.3,1),visibility_0s_linear_0s]"
-            : "invisible [clip-path:inset(0_0_100%_0)]",
+            ? "opacity-100 [clip-path:inset(0_0_0%_0)]"
+            : "pointer-events-none opacity-0 [clip-path:inset(0_0_100%_0)]",
         )}
       >
         <nav aria-label="Primary, expanded">
@@ -213,10 +220,10 @@ export function Header() {
                 <a
                   href={link.href}
                   onClick={close}
-                  style={{ transitionDelay: open ? `${0.2 + i * 0.045}s` : "0s" }}
+                  style={{ transitionDelay: open ? `${0.09 + i * 0.028}s` : "0s" }}
                   className={cn(
                     "flex min-h-[2.75rem] items-baseline gap-4 py-1.5 font-display text-[clamp(2.1rem,1rem+6.5vw,3.2rem)] font-semibold leading-[1.04] tracking-tight text-ink",
-                    "[transition:clip-path_560ms_cubic-bezier(0.16,1,0.3,1),transform_560ms_cubic-bezier(0.16,1,0.3,1)]",
+                    "[transition:clip-path_300ms_cubic-bezier(0.22,1,0.36,1),transform_300ms_cubic-bezier(0.22,1,0.36,1)]",
                     open
                       ? "translate-y-0 [clip-path:inset(0_0_0%_0)]"
                       : "translate-y-3.5 [clip-path:inset(0_0_100%_0)]",
@@ -233,10 +240,10 @@ export function Header() {
         </nav>
 
         <div
-          style={{ transitionDelay: open ? "0.46s" : "0s" }}
+          style={{ transitionDelay: open ? "0.22s" : "0s" }}
           className={cn(
             "grid justify-items-start gap-3 border-t border-green-line pt-6",
-            "[transition:clip-path_560ms_cubic-bezier(0.16,1,0.3,1),transform_560ms_cubic-bezier(0.16,1,0.3,1)]",
+            "[transition:clip-path_300ms_cubic-bezier(0.22,1,0.36,1),transform_300ms_cubic-bezier(0.22,1,0.36,1)]",
             open
               ? "translate-y-0 [clip-path:inset(0_0_0%_0)]"
               : "translate-y-3.5 [clip-path:inset(0_0_100%_0)]",

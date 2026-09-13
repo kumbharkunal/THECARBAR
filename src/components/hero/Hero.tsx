@@ -6,7 +6,7 @@ import { FIND_MY_CAR_HREF, SITE, WHATSAPP_HREF } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { Button } from "@/components/ui/Button";
 import { WhatsAppIcon } from "@/components/ui/icons";
-import { LensMark } from "@/components/narrative/LensMark";
+import { HeroLens } from "./HeroLens";
 
 /**
  * First frame. The headline and primary CTA are readable and clickable
@@ -46,19 +46,8 @@ export function Hero() {
       {/* A single soft green wash gives the white hero depth without a dark ground. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(78%_62%_at_82%_30%,var(--color-green-soft)_0%,transparent_70%)] md:bg-[radial-gradient(52%_74%_at_72%_50%,var(--color-green-soft)_0%,transparent_72%)]"
+        className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(74%_44%_at_50%_74%,var(--color-green-soft)_0%,transparent_72%)] md:bg-[radial-gradient(52%_74%_at_72%_50%,var(--color-green-soft)_0%,transparent_72%)]"
       />
-
-      {/* The lens: the logo's magnifying glass, established here before it searches. */}
-      <div
-        aria-hidden
-        className="hero-lens pointer-events-none absolute right-[-18%] top-[24%] -z-10 w-[74vw] max-w-[760px] -translate-y-1/2 md:right-[-2%] md:top-1/2 md:w-[46vw]"
-      >
-        {/* Opacity lives on the inner node so the .hero-lens tween never pins it. */}
-        <div className="opacity-50 md:opacity-100">
-          <LensMark />
-        </div>
-      </div>
 
       <div className="shell">
         <p className="hero-eyebrow label-mono flex items-center gap-2.5 text-green-deep">
@@ -100,6 +89,15 @@ export function Hero() {
             <WhatsAppIcon size={16} />
             WhatsApp us
           </Button>
+        </div>
+
+        {/*
+          The lens, with the cars we search for passing through the glass.
+          In flow on mobile — behind the copy it collided with the eyebrow — and
+          absolutely placed in the right half from md.
+        */}
+        <div className="hero-lens pointer-events-none relative mx-auto mt-6 w-[58vw] max-w-[240px] md:absolute md:right-[-2%] md:top-1/2 md:mt-0 md:w-[46vw] md:max-w-[760px] md:-translate-y-1/2">
+          <HeroLens />
         </div>
 
         <div className="hero-meta rule-line mt-10 flex flex-wrap gap-x-8 gap-y-2.5 pt-5 md:mt-12 md:gap-x-10">
