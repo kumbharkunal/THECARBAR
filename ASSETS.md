@@ -76,28 +76,31 @@ as real customers or deliveries.
 
 ## 4. Instagram reels
 
-`src/data/reels.ts` — five placeholder entries, each `isPlaceholder: true`, all
-currently linking to the profile.
+`src/data/reels.ts` — the five supplied reels, embedded via Instagram's official
+`/embed` endpoint. Only the shortcode is stored; the permalink and embed URL derive
+from it.
 
-For each reel supply: the permalink, a 9:16 thumbnail (1080×1920, into
-`public/media/reels/`), and a short caption. Set `isPlaceholder: false` and the
-placeholder notice disappears on its own.
+To add or swap a reel, change its shortcode in `REELS`.
 
 Instagram is never scraped and no live embed is depended on, per the brief.
 
 ## 5. Testimonials — consent required
 
-`src/data/testimonials.ts` — three entries, all `isDemo: true`. The wording is
-deliberately generic scaffolding, **not** attributed quotes.
+`src/data/testimonials.ts` — three entries. `name` and `vehicle` are omitted, so
+each quote currently renders with its location only.
+
+**The quote wording itself is still written copy, not a real customer statement.**
+Replace it before launch.
 
 Each real one needs: quote, customer name (as they agree to be credited), vehicle,
-city, and their consent to publish. Set `isDemo: false` and the "sample layout"
-notice disappears automatically.
+city, and their consent to publish. Add `name` and `vehicle` and they appear in the
+attribution automatically.
 
 ## 6. Customer stories — consent required
 
-`src/data/stories.ts` — three entries, all `isDemo: true`. Same consent requirement;
-delivery photographs identify real people.
+`src/data/stories.ts` — three entries with `image: null`, so each renders the
+art-directed frame. Same consent requirement: delivery photographs identify real
+people.
 
 ## 7. Available cars
 
@@ -151,8 +154,8 @@ drop screenshots into `public/brand/reference/`.
 - [ ] `logo.svg` (vector replacement for the 521 KB PNG)
 - [ ] Real photography replacing every `null` image
 - [ ] Real reels with thumbnails and permalinks
-- [ ] Consented testimonials, `isDemo: false`
-- [ ] Consented customer stories, `isDemo: false`
+- [ ] Real consented testimonial wording (current copy is written, not quoted)
+- [ ] Consented customer story photography
 - [ ] Analytics provider connected
 - [ ] Privacy policy and terms pages (footer links are placeholders)
 - [ ] Point `FIND_MY_CAR_HREF` at `/find-my-car` once that page exists

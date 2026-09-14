@@ -32,8 +32,14 @@ for (const vp of VIEWPORTS) {
   });
   const page = await context.newPage();
 
+  // Only our own origin's errors count. The Instagram reel embeds report their
+  // own CSP warnings from inside their iframes, which we neither cause nor can fix.
+  const OURS = new URL(BASE).origin;
   page.on("console", (msg) => {
-    if (msg.type() === "error") problems.push(`[${vp.name}] console: ${msg.text()}`);
+    if (msg.type() !== "error") return;
+    const from = msg.location()?.url ?? "";
+    if (from && !from.startsWith(OURS)) return;
+    problems.push(`[${vp.name}] console: ${msg.text()}`);
   });
   page.on("pageerror", (err) => problems.push(`[${vp.name}] pageerror: ${err.message}`));
 

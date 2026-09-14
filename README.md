@@ -57,7 +57,7 @@ src/
 │  ├─ narrative/   ActOne · ActTwo · NetworkGraph · LensMark · RequirementCard
 │  ├─ process/     HowItWorks
 │  ├─ why · cars · reels · social · trust · cta
-│  └─ ui/          Button · SectionHeading · Reveal · MediaFrame · DemoNote · icons
+│  └─ ui/          Button · SectionHeading · Reveal · MediaFrame · SocialIcon · icons
 ├─ lib/            gsap.ts (single registerPlugin site) · network.ts · analytics.ts
 └─ data/           site · navigation · cars · reels · testimonials · stories
 ```
@@ -131,9 +131,10 @@ off the page still delivers its full argument (42 headings, ~7,700 characters).
 Nothing is invented — no customer counts, dealer counts, inventory counts, years,
 awards, ratings, or "live" availability.
 
-Demo content is flagged in the data layer (`isDemo` / `isPlaceholder`) and the UI
-renders a visible `DemoNote` while any remains. Available cars are labelled a
-showcase, and every CTA says *check availability*, never *buy now*.
+Content that is not yet supplied is simply absent rather than stood in for:
+attribution fields are optional, so a quote renders its location until a real,
+consented name exists. Available cars are introduced as *"not listings"*, and
+every CTA says *check availability*, never *buy now*.
 
 See **ASSETS.md** for everything the client still needs to supply.
 

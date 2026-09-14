@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
-import { HAS_REAL_TESTIMONIALS, TESTIMONIALS } from "@/data/testimonials";
+import { TESTIMONIALS } from "@/data/testimonials";
 import { track } from "@/lib/analytics";
 import { Eyebrow } from "@/components/ui/SectionHeading";
-import { DemoNote } from "@/components/ui/DemoNote";
 import { cn } from "@/lib/utils";
 
 /** How long each quote holds before the next one takes over. */
@@ -119,15 +118,20 @@ export function Testimonials() {
                       current && "quote-enter",
                     )}
                   >
-                    <span className="text-ink">{t.name}</span>
-                    <span aria-hidden className="text-green-deep">
-                      ·
-                    </span>
-                    <span>{t.vehicle}</span>
-                    <span aria-hidden className="text-green-deep">
-                      ·
-                    </span>
-                    <span>{t.location}</span>
+                    {[t.name, t.vehicle, t.location]
+                      .filter(Boolean)
+                      .map((part, n) => (
+                        <span key={part} className="flex items-center gap-x-3">
+                          {n > 0 && (
+                            <span aria-hidden className="text-green-deep">
+                              ·
+                            </span>
+                          )}
+                          <span className={n === 0 ? "text-ink" : undefined}>
+                            {part}
+                          </span>
+                        </span>
+                      ))}
                   </footer>
                 </div>
               );
@@ -209,12 +213,6 @@ export function Testimonials() {
           </div>
         </div>
 
-        {!HAS_REAL_TESTIMONIALS && (
-          <DemoNote tone="light" className="mt-8 max-w-xl">
-            Sample layout using placeholder wording — not real customer quotes.
-            Replace with consented testimonials before launch.
-          </DemoNote>
-        )}
       </div>
     </section>
   );

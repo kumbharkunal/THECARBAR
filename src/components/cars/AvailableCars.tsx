@@ -6,7 +6,6 @@ import { AVAILABILITY_LABEL, CARS, type Car } from "@/data/cars";
 import { WHATSAPP_HREF } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { DemoNote } from "@/components/ui/DemoNote";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 
 function enquiryHref(car: Car) {
@@ -100,13 +99,6 @@ export function AvailableCars() {
         </div>
       </div>
 
-      <div className="shell mt-8">
-        <DemoNote tone="light" className="max-w-xl">
-          Showcase selection, not live inventory. Availability, variant and colour
-          are always confirmed with the relevant authorised seller before anything
-          moves forward.
-        </DemoNote>
-      </div>
     </section>
   );
 }

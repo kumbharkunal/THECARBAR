@@ -22,7 +22,9 @@ Never make the site look like a dealership, a marketplace, an e-commerce store, 
 
 Never fabricate customer counts, dealer counts, inventory counts, years in business, awards, review scores, testimonials, delivery statistics, partnerships, or "live" availability numbers.
 
-When real content is unavailable, add a clearly-marked placeholder to the **data layer** (`src/data/*.ts`) with `isDemo: true`, and surface it in the UI via `<DemoNote>`. Never present generated content as genuine.
+When real content is unavailable, keep it in the **data layer** (`src/data/*.ts`) and make the field optional so the UI simply renders less rather than rendering a stand-in. Attribution fields (`name`, `vehicle`) are optional for exactly this reason — a quote shows only its location until a real, consented name exists.
+
+**Never invent a specific person, delivery, count, or availability claim.** An unattributed quote is a presentation choice; a fabricated named customer is not.
 
 ## 3. Brand
 

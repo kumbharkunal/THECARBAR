@@ -1,6 +1,5 @@
-import { HAS_REAL_STORIES, STORIES } from "@/data/stories";
+import { STORIES } from "@/data/stories";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { DemoNote } from "@/components/ui/DemoNote";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { Reveal } from "@/components/ui/Reveal";
 
@@ -30,9 +29,11 @@ export function CustomerStories() {
                 <h3 className="display-md mt-3 uppercase text-ink">
                   {lead.headline}
                 </h3>
-                <p className="mt-3 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-ink-faint">
-                  {lead.vehicle}
-                </p>
+                {lead.vehicle && (
+                  <p className="mt-3 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-ink-faint">
+                    {lead.vehicle}
+                  </p>
+                )}
               </figcaption>
             </figure>
 
@@ -54,9 +55,11 @@ export function CustomerStories() {
                     <h3 className="mt-2.5 font-display text-lg uppercase leading-tight tracking-tight text-ink sm:text-xl">
                       {story.headline}
                     </h3>
-                    <p className="mt-2 font-mono text-[0.66rem] uppercase tracking-[0.1em] text-ink-faint">
-                      {story.vehicle}
-                    </p>
+                    {story.vehicle && (
+                      <p className="mt-2 font-mono text-[0.66rem] uppercase tracking-[0.1em] text-ink-faint">
+                        {story.vehicle}
+                      </p>
+                    )}
                   </figcaption>
                 </figure>
               ))}
@@ -64,12 +67,6 @@ export function CustomerStories() {
           </div>
         </Reveal>
 
-        {!HAS_REAL_STORIES && (
-          <DemoNote className="mt-8 max-w-xl md:mt-10">
-            Placeholder imagery and wording. Real delivery photographs will be
-            published only with the customer&apos;s consent.
-          </DemoNote>
-        )}
       </div>
     </section>
   );
