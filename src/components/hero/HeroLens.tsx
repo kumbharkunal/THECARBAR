@@ -113,7 +113,7 @@ export function HeroLens({ className }: { className?: string }) {
 
         {/* Model name, so the sequence reads as a search rather than a slideshow. */}
         <div className="pointer-events-none absolute inset-x-[6%] bottom-[11%] flex justify-center">
-          <div className="relative h-6">
+          <div className="relative h-6 w-full">
             {HERO_CARS.map((car) => (
               <span
                 key={car.image}
