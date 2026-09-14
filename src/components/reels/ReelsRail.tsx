@@ -207,7 +207,10 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
           {reels.map((reel, i) => {
             const isActive = i === active;
             const isPlaying = isActive && playing && reel.hasVideo;
-            const showVideo = reel.hasVideo && ready[reel.shortcode] && isPlaying;
+            // Held on the active card whether or not it is running, so pausing
+            // freezes on the frame instead of snapping back to the cover, which
+            // read as the reel resetting itself.
+            const showVideo = reel.hasVideo && ready[reel.shortcode] && isActive;
 
             return (
               <article
@@ -270,7 +273,17 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
                   {reel.hasVideo && !reduced && (
                     <button
                       type="button"
-                      onClick={() => setPaused((p) => !p)}
+                      onClick={() => {
+                        // Clicking a card hands playback to that card. Toggling
+                        // a global pause here instead meant every frame on the
+                        // rail drove the one card that happened to be centred.
+                        if (i === active) {
+                          setPaused((p) => !p);
+                        } else {
+                          setActive(i);
+                          setPaused(false);
+                        }
+                      }}
                       className="absolute inset-0 z-10 flex items-center justify-center"
                     >
                       <span className="sr-only">
@@ -294,8 +307,9 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
                     </button>
                   )}
 
-                  {/* Sound belongs on the card that is actually making it. */}
-                  {isPlaying && (
+                  {/* Sound belongs on the card holding the video, and stays put
+                      while it is paused so the control does not jump about. */}
+                  {showVideo && (
                     <button
                       type="button"
                       onClick={() => setMuted((m) => !m)}
