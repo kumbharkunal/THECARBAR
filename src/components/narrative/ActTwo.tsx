@@ -315,7 +315,7 @@ export function ActTwo() {
       ref={root}
       id="network"
       aria-labelledby="act-two-title"
-      className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-paper py-20 md:py-24 lg:pb-10 lg:pt-28"
+      className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-paper py-16 md:py-20 lg:py-[clamp(4.5rem,8vh,6.5rem)]"
     >
       <div className="flex w-full flex-col shell">
         <h2 id="act-two-title" className="sr-only">
@@ -382,26 +382,46 @@ export function ActTwo() {
           </div>
         </div>
 
-        {/* The relationship, stated plainly — state 9. */}
-        <div className="a2-chain mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-x-3 gap-y-3 sm:gap-x-4 lg:mt-7">
-          {["You", "THE CAR-BAR", "Authorised seller"].map((node, i) => (
-            <span key={node} className="flex items-center gap-3 sm:gap-4">
+        {/*
+          The relationship, stated plainly — state 9.
+
+          Pills and arrows are siblings rather than nested pairs: nested, a
+          trailing arrow stayed glued to its pill when the row wrapped on a
+          phone, which threw the centring off. Flat children let justify-center
+          centre every line.
+
+          On desktop it leaves the flow. It is invisible until the final beat,
+          but in flow it still claimed ~68px of the column the section centres —
+          so everything the visitor could actually see sat half that below the
+          middle of the screen for the whole act.
+        */}
+        <div className="a2-chain mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-x-3 gap-y-2.5 sm:gap-x-4 lg:absolute lg:inset-x-0 lg:bottom-[clamp(1.25rem,3.5vh,2.5rem)] lg:mt-0">
+          {["You", "THE CAR-BAR", "Authorised seller"].flatMap((node, i) => {
+            const pill = (
               <span
+                key={node}
                 className={
                   i === 1
-                    ? "rounded-full bg-green px-4 py-2.5 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-ink sm:tracking-[0.14em]"
-                    : "rounded-full border border-line bg-paper px-4 py-2.5 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-ink sm:tracking-[0.14em]"
+                    ? "rounded-full bg-green px-4 py-2.5 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-ink sm:text-[0.7rem] sm:tracking-[0.14em]"
+                    : "rounded-full border border-line bg-paper px-4 py-2.5 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-ink sm:text-[0.7rem] sm:tracking-[0.14em]"
                 }
               >
                 {node}
               </span>
-              {i < 2 && (
-                <span aria-hidden className="text-green-deep">
-                  →
-                </span>
-              )}
-            </span>
-          ))}
+            );
+            return i < 2
+              ? [
+                  pill,
+                  <span
+                    key={`${node}-arrow`}
+                    aria-hidden
+                    className="text-green-deep"
+                  >
+                    →
+                  </span>,
+                ]
+              : [pill];
+          })}
         </div>
       </div>
     </section>

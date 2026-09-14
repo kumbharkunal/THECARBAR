@@ -12,6 +12,7 @@ import { CustomerStories } from "@/components/social/CustomerStories";
 import { Transparency } from "@/components/trust/Transparency";
 import { FinalCta } from "@/components/cta/FinalCta";
 import { MotionBoot } from "@/components/ui/MotionBoot";
+import { SiteLoader } from "@/components/ui/SiteLoader";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
         Skip to content
       </a>
 
+      <SiteLoader />
       <MotionBoot />
       <Header />
 

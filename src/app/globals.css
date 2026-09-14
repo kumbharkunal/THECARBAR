@@ -280,3 +280,128 @@
     animation: none;
   }
 }
+
+/* ---- First-visit loader ---- */
+
+@keyframes loader-sweep {
+  0% {
+    transform: translateX(8px);
+  }
+  100% {
+    transform: translateX(212px);
+  }
+}
+
+@keyframes loader-letter {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loader-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/*
+ * The loader is server-rendered, so it is on screen before React exists. Its JS
+ * dismissal clock only starts at hydration, which on a slow connection is the
+ * one moment it must not be trusted — so the exit is also armed in CSS, which
+ * runs from first paint and does not need JS at all. Whichever fires first wins;
+ * normally that is the JS path, long before this.
+ */
+@keyframes loader-timeout {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.site-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--color-paper);
+  transition:
+    opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 500ms;
+  animation: loader-timeout 450ms linear 3.6s forwards;
+}
+
+.site-loader.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.site-loader__stage {
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+  padding-inline: 1.5rem;
+  width: min(23rem, 82vw);
+}
+
+.site-loader__art {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* The lens and the clip circle travel together, so the reveal tracks the glass. */
+.site-loader__lens,
+.site-loader__mask {
+  animation: loader-sweep 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+.site-loader__word {
+  display: flex;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 4.4vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  color: var(--color-ink);
+}
+
+.site-loader__word span {
+  opacity: 0;
+  animation: loader-letter 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.site-loader__stage::after {
+  content: "";
+  width: 4.5rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-green);
+  transform-origin: left center;
+  animation: loader-rule 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+/* The loader never renders under reduced motion, but guard the keyframes anyway. */
+@media (prefers-reduced-motion: reduce) {
+  .site-loader__lens,
+  .site-loader__mask,
+  .site-loader__word span,
+  .site-loader__stage::after {
+    animation: none;
+  }
+  /* The timeout is a safety net, not decoration — it stays. */
+  .site-loader {
+    animation: loader-timeout 1ms linear 900ms forwards;
+  }
+  .site-loader__word span {
+    opacity: 1;
+  }
+}

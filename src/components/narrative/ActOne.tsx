@@ -106,7 +106,7 @@ export function ActOne() {
     <section
       ref={root}
       aria-labelledby="act-one-title"
-      className="relative flex min-h-screen items-center overflow-hidden bg-paper-2 py-20 md:py-24 lg:pb-10 lg:pt-28"
+      className="relative flex min-h-screen items-center overflow-hidden bg-paper-2 py-16 md:py-20 lg:py-[clamp(5rem,9vh,7rem)]"
     >
       <div className="shell grid w-full items-center gap-12 md:gap-14 lg:grid-cols-[0.95fr_1.05fr]">
         <div>
@@ -140,7 +140,7 @@ export function ActOne() {
           {/* Single connector — one requirement, one seller, one answer. */}
           <span
             aria-hidden
-            className="a1-link my-5 block h-16 w-px bg-gradient-to-b from-green to-line sm:my-6 sm:h-20 md:my-8 md:h-24"
+            className="a1-link my-4 block h-10 w-px bg-gradient-to-b from-green to-line sm:my-5 sm:h-14 lg:my-[clamp(0.75rem,2vh,1.75rem)] lg:h-[clamp(2rem,6vh,5rem)]"
           />
 
           <div className="a1-seller relative w-full max-w-sm">

@@ -57,17 +57,17 @@ export function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.label}
-                      className="group inline-flex h-12 w-12 items-center justify-center rounded-full border border-line bg-paper transition-all duration-300 hover:-translate-y-0.5 hover:border-green-line hover:bg-green-soft"
+                      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line bg-paper transition-all duration-300 hover:-translate-y-0.5 hover:border-green-line hover:bg-green-soft"
                     >
                       <SocialIcon src={social.icon} label={social.label} size={19} />
                     </a>
                   </li>
                 ) : (
-                  // No URL supplied yet — shown, but not a dead link.
+                  // No URL yet, so not a link — but shown at full strength.
                   <li key={social.label}>
                     <span
-                      title={`${social.label} — link not supplied yet`}
-                      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-line bg-paper opacity-40"
+                      title={social.label}
+                      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line bg-paper"
                     >
                       <SocialIcon src={social.icon} label={social.label} size={19} />
                     </span>
