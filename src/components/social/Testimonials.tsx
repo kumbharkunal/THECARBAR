@@ -8,7 +8,7 @@ import { Eyebrow } from "@/components/ui/SectionHeading";
 import { cn } from "@/lib/utils";
 
 /** How long each quote holds before the next one takes over. */
-const HOLD_MS = 7000;
+const HOLD_MS = 2000;
 
 export function Testimonials() {
   const [index, setIndex] = useState(0);
