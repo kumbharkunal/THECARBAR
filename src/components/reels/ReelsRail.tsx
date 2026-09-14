@@ -69,10 +69,13 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
     const measure = () => {
       frame = 0;
       const mid = rail.scrollLeft + rail.clientWidth / 2;
-      let best = 0;
+      // Only cards that can actually play are candidates. Reels too large to
+      // cache carry no video, and letting one win the centre would leave the
+      // whole rail silent while nine playable reels sat either side of it.
+      let best = -1;
       let bestDistance = Infinity;
       cardRefs.current.forEach((el, i) => {
-        if (!el) return;
+        if (!el || !reels[i]?.hasVideo) return;
         const distance = Math.abs(el.offsetLeft + el.offsetWidth / 2 - mid);
         if (distance < bestDistance) {
           bestDistance = distance;
@@ -96,7 +99,7 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
       window.removeEventListener("resize", schedule);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [reels]);
 
   // One plays, the rest rewind. `play()` rejects when the browser declines
   // autoplay; that is a normal outcome, not an error worth surfacing.

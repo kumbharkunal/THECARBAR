@@ -74,6 +74,46 @@ function coverUrl(item: Item): string | null {
   return null;
 }
 
+/**
+ * Vercel's CDN refuses to cache a response over 10 MB — measured against
+ * production: 8.7 MB comes back HIT, 11.0 MB and 16.1 MB never do.
+ *
+ * An uncacheable reel is fetched from Instagram on every single view, and stops
+ * playing altogether once the signed URL expires about 34 hours in. Rather than
+ * show a play button that works for half a cycle and costs 37 MB a viewer, those
+ * reels keep their cover and link out, which is where they would play anyway.
+ */
+const MAX_INLINE_BYTES = 10_000_000;
+
+/** Total size via a one-byte range — cheaper and likelier to answer than HEAD. */
+async function videoBytes(url: string): Promise<number | null> {
+  try {
+    const res = await fetch(url, {
+      headers: { Range: "bytes=0-0" },
+      signal: AbortSignal.timeout(10_000),
+      cache: "no-store",
+    });
+    const total = res.headers.get("content-range")?.split("/")[1];
+    const bytes = total ? Number(total) : NaN;
+    return Number.isFinite(bytes) ? bytes : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Drops the mp4 from anything we cannot serve reliably. Size unknown counts. */
+async function keepPlayable(reels: Reel[]): Promise<Reel[]> {
+  return Promise.all(
+    reels.map(async (reel) => {
+      if (!reel.video) return reel;
+      const bytes = await videoBytes(reel.video);
+      return bytes !== null && bytes <= MAX_INLINE_BYTES
+        ? reel
+        : { ...reel, video: null };
+    }),
+  );
+}
+
 /** The reel's mp4. Same CDN guard as the cover — anything else is not ours. */
 function videoUrl(item: Item): string | null {
   const url = str(item.videoUrl) ?? str(item.video_url);
@@ -170,7 +210,8 @@ async function scrapeReels(): Promise<Reel[]> {
   // Newest first, for reels that carry a timestamp.
   reels.sort((a, b) => (b.postedAt ?? "").localeCompare(a.postedAt ?? ""));
 
-  return reels.slice(0, REEL_LIMIT);
+  // Sized last, so only the reels actually on the page are measured.
+  return keepPlayable(reels.slice(0, REEL_LIMIT));
 }
 
 /**
@@ -181,7 +222,7 @@ async function scrapeReels(): Promise<Reel[]> {
  * `video` arrived this way: every reel came back with no mp4 and the rail
  * rendered no players at all.
  */
-const SHAPE = "v2-video";
+const SHAPE = "v3-playable";
 
 const cachedScrape = unstable_cache(scrapeReels, ["instagram-reels", ACTOR, SHAPE], {
   revalidate: REELS_REVALIDATE,
