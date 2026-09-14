@@ -28,32 +28,29 @@ export type Reel = {
 export const REEL_LIMIT = 12;
 
 /**
- * Wording that beats whatever the caption says, keyed by shortcode.
+ * Wording that beats the real caption, keyed by shortcode.
  *
- * The client's own captions are written for Instagram; these are written for the
- * page. Delete an entry and the real caption takes over.
+ * Empty on purpose. The previous entries were written before anyone could see
+ * the posts and described them wrongly — a stock-update reel was labelled
+ * "Handover day", inventing a delivery (CLAUDE.md §2). Only add an entry for a
+ * reel you have actually watched.
  */
-export const CAPTION_OVERRIDES: Record<string, string> = {
-  "Dcz-tbMsWPB": "From the showroom floor",
-  "DcvzZ8osrle": "Handover day",
-  "Dcu6BkEs6Tx": "Walkaround",
-  "DcjXWkpstDs": "On the road",
-  "DcbahaHPWKv": "Just delivered",
-};
+export const CAPTION_OVERRIDES: Record<string, string> = {};
 
 /**
  * The five reels the client supplied, shipped in the bundle.
  *
  * They are what renders with no Apify token, with no network, and on the day the
  * scrape breaks. The section is never empty and never fabricated — these are
- * real posts.
+ * real posts, carrying no caption because we cannot confirm what each one says
+ * without the scrape; the card renders without a caption line.
  */
 export const FALLBACK_REELS: Reel[] = [
-  { shortcode: "Dcz-tbMsWPB", caption: "From the showroom floor", thumbnail: null },
-  { shortcode: "DcvzZ8osrle", caption: "Handover day", thumbnail: null },
-  { shortcode: "Dcu6BkEs6Tx", caption: "Walkaround", thumbnail: null },
-  { shortcode: "DcjXWkpstDs", caption: "On the road", thumbnail: null },
-  { shortcode: "DcbahaHPWKv", caption: "Just delivered", thumbnail: null },
+  { shortcode: "Dcz-tbMsWPB", thumbnail: null },
+  { shortcode: "DcvzZ8osrle", thumbnail: null },
+  { shortcode: "Dcu6BkEs6Tx", thumbnail: null },
+  { shortcode: "DcjXWkpstDs", thumbnail: null },
+  { shortcode: "DcbahaHPWKv", thumbnail: null },
 ];
 
 export const reelPermalink = (reel: Pick<Reel, "shortcode">) =>
