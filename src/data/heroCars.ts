@@ -11,10 +11,13 @@ export type HeroCar = {
   image: string;
 };
 
+// Order matters: the first car is the one the visitor meets, and it is the only
+// one loaded with priority.
 export const HERO_CARS: HeroCar[] = [
+  { name: "Toyota Fortuner", image: "/media/cars/fortuner.webp" },
+  { name: "Toyota Innova", image: "/media/cars/innova.webp" },
   { name: "Mahindra Thar", image: "/media/cars/thar.webp" },
   { name: "Hyundai Creta", image: "/media/cars/creta.webp" },
-  { name: "Toyota Innova", image: "/media/cars/innova.webp" },
   { name: "Kia Seltos", image: "/media/cars/seltos.webp" },
   { name: "Tata Nexon", image: "/media/cars/nexon.webp" },
   { name: "MG Hector", image: "/media/cars/hector.webp" },
