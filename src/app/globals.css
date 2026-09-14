@@ -30,6 +30,7 @@
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 
   --nav-h: 4.5rem;
+  --gutter: clamp(1.15rem, 4.5vw, 4.5rem);
 }
 
 @layer base {
@@ -183,7 +184,25 @@
   width: 100%;
   max-width: 88rem;
   margin-inline: auto;
-  padding-inline: clamp(1.15rem, 4.5vw, 4.5rem);
+  padding-inline: var(--gutter);
+}
+
+/**
+ * A horizontal rail that starts flush with the shell's text column but can still
+ * bleed its cards off the edge. Sits INSIDE a .shell, cancels that gutter with a
+ * negative margin, then puts it back as padding — so the first card lines up
+ * under the heading instead of hugging the viewport edge.
+ */
+@utility rail-inset {
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  /*
+   * Without this, scroll-snap aligns the first card to the scrollport edge and
+   * the browser scrolls straight past the padding — the card ends up flush with
+   * the viewport while the heading sits a gutter in. scroll-padding makes the
+   * snap positions respect the same gutter.
+   */
+  scroll-padding-inline: var(--gutter);
 }
 
 @utility rule-line {

@@ -9,17 +9,24 @@ import { WhatsAppIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 /**
- * A floating pill that never hides on scroll direction — direction-flip navs
- * flicker, and there is nothing to gain here. Only the ground changes: clear
- * over the top of the page, frosted once you are past it. The two thresholds
- * give it hysteresis so it cannot oscillate at the boundary.
+ * A floating pill that retracts on the way down and returns on the way up.
+ *
+ * Direction-flip navs are prone to flickering, so this one only reacts once the
+ * scroll has moved DELTA in a consistent direction, and never hides inside the
+ * top REVEAL_ABOVE of the page. The ground has its own two thresholds so the
+ * frosted state cannot oscillate at its boundary either.
  */
 const GROUND_ON = 110;
 const GROUND_OFF = 55;
+/** Sustained movement needed before the bar reacts to a direction change. */
+const DELTA = 12;
+/** Never hide while this close to the top — there is nothing to reclaim yet. */
+const REVEAL_ABOVE = 140;
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const [grounded, setGrounded] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState<string | null>(null);
 
   const panelId = useId();
@@ -27,10 +34,21 @@ export function Header() {
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const read = () =>
-      setGrounded((was) =>
-        was ? window.scrollY > GROUND_OFF : window.scrollY > GROUND_ON,
-      );
+    let last = window.scrollY;
+
+    const read = () => {
+      const y = window.scrollY;
+      setGrounded((was) => (was ? y > GROUND_OFF : y > GROUND_ON));
+
+      const moved = y - last;
+      if (Math.abs(moved) > DELTA) {
+        // Down retracts, up returns — but only past the top, and never while the
+        // mobile panel is open, where the toggle has to stay reachable.
+        setHidden(moved > 0 && y > REVEAL_ABOVE);
+        last = y;
+      }
+    };
+
     read();
     window.addEventListener("scroll", read, { passive: true });
     return () => window.removeEventListener("scroll", read);
@@ -104,7 +122,9 @@ export function Header() {
       <header
         className={cn(
           "fixed left-1/2 top-3 z-50 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full py-1.5 pl-4 pr-1.5 md:top-4 md:pl-5",
-          "border backdrop-blur-2xl backdrop-saturate-[1.8] transition-[background-color,border-color,box-shadow] duration-500",
+          "border backdrop-blur-2xl backdrop-saturate-[1.8]",
+          "transition-[background-color,border-color,box-shadow,transform,opacity] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+          hidden && !open && "pointer-events-none -translate-y-[calc(100%+1.25rem)] opacity-0",
           // An inner top highlight is what sells glass; the ring is the green edge.
           "shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]",
           grounded

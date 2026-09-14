@@ -41,15 +41,25 @@ for (const vp of VIEWPORTS) {
   await page.waitForTimeout(900);
 
   // Horizontal overflow is the single most likely responsive failure here.
+  //
+  // Test whether the page can ACTUALLY be scrolled sideways, not whether
+  // scrollWidth exceeds clientWidth: body has `overflow-x: clip`, under which
+  // scrollWidth still reports the unclipped content width even though nothing
+  // is reachable or visible. Comparing those two cried wolf on every rail that
+  // legitimately bleeds past its parent.
   const overflow = await page.evaluate(() => {
     const doc = document.documentElement;
+    const before = window.scrollX;
+    window.scrollTo(99999, window.scrollY);
+    const reached = window.scrollX;
+    window.scrollTo(0, window.scrollY);
+
     const offenders = [];
-    if (doc.scrollWidth > doc.clientWidth + 1) {
+    if (reached > before) {
       for (const el of document.querySelectorAll("body *")) {
         const r = el.getBoundingClientRect();
         if (r.right > doc.clientWidth + 1 || r.left < -1) {
           const style = getComputedStyle(el);
-          // Rails scroll inside themselves; that is intentional.
           if (style.overflowX === "auto" || style.overflowX === "scroll") continue;
           offenders.push(
             `${el.tagName}.${String(el.className).slice(0, 60)} right=${Math.round(r.right)} left=${Math.round(r.left)}`,
@@ -57,13 +67,12 @@ for (const vp of VIEWPORTS) {
         }
       }
     }
-    return { docScroll: doc.scrollWidth, docClient: doc.clientWidth, offenders: offenders.slice(0, 6) };
+    return { scrollable: reached > before, reached, offenders: offenders.slice(0, 6) };
   });
 
-  if (overflow.docScroll > overflow.docClient + 1) {
-    problems.push(
-      `[${vp.name}] H-OVERFLOW ${overflow.docScroll} > ${overflow.docClient}\n    ${overflow.offenders.join("\n    ")}`,
-    );
+  if (overflow.scrollable) {
+    const detail = overflow.offenders.join(" | ");
+    problems.push(`[${vp.name}] H-SCROLLABLE to ${overflow.reached}px :: ${detail}`);
   }
 
   const total = await page.evaluate(

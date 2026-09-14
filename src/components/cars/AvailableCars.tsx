@@ -31,10 +31,12 @@ export function AvailableCars() {
         />
       </div>
 
-      <div
-        ref={rail}
-        className="rail-scroll mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[clamp(1.15rem,4.5vw,4.5rem)] pb-4 sm:gap-5 md:mt-14"
-      >
+      {/* Inside a shell so the first card lines up under the heading. */}
+      <div className="shell mt-10 md:mt-14">
+        <div
+          ref={rail}
+          className="rail-scroll rail-inset flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 sm:gap-5"
+        >
         {CARS.map((car, i) => (
           <article
             key={car.slug}
@@ -95,6 +97,7 @@ export function AvailableCars() {
             </div>
           </article>
         ))}
+        </div>
       </div>
 
       <div className="shell mt-8">

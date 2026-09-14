@@ -1,52 +1,27 @@
 /**
- * Instagram reels. Placeholder entries until the client supplies real URLs and
- * thumbnails — Instagram is never scraped and no live embed is depended on.
+ * Instagram reels, embedded through Instagram's official /embed endpoint.
+ *
+ * Only the shortcode is stored — the permalink and the embed URL are derived, so
+ * there is one source of truth per reel. Adding a reel means adding a shortcode.
  */
 
 export type Reel = {
-  id: string;
-  /** Real permalink when supplied; profile URL is the safe fallback. */
-  url: string;
-  /** null renders the placeholder frame. */
-  thumbnail: string | null;
+  /** The code in instagram.com/reel/<shortcode>/ */
+  shortcode: string;
   caption: string;
-  isPlaceholder: boolean;
 };
 
 export const REELS: Reel[] = [
-  {
-    id: "reel-1",
-    url: "https://www.instagram.com/thecarbar.in/",
-    thumbnail: null,
-    caption: "Delivery day",
-    isPlaceholder: true,
-  },
-  {
-    id: "reel-2",
-    url: "https://www.instagram.com/thecarbar.in/",
-    thumbnail: null,
-    caption: "Walkaround",
-    isPlaceholder: true,
-  },
-  {
-    id: "reel-3",
-    url: "https://www.instagram.com/thecarbar.in/",
-    thumbnail: null,
-    caption: "Handover",
-    isPlaceholder: true,
-  },
-  {
-    id: "reel-4",
-    url: "https://www.instagram.com/thecarbar.in/",
-    thumbnail: null,
-    caption: "On the road",
-    isPlaceholder: true,
-  },
-  {
-    id: "reel-5",
-    url: "https://www.instagram.com/thecarbar.in/",
-    thumbnail: null,
-    caption: "New arrival",
-    isPlaceholder: true,
-  },
+  { shortcode: "Dcz-tbMsWPB", caption: "From the showroom floor" },
+  { shortcode: "DcvzZ8osrle", caption: "Handover day" },
+  { shortcode: "Dcu6BkEs6Tx", caption: "Walkaround" },
+  { shortcode: "DcjXWkpstDs", caption: "On the road" },
+  { shortcode: "DcbahaHPWKv", caption: "Just delivered" },
 ];
+
+export const reelPermalink = (r: Reel) =>
+  `https://www.instagram.com/reel/${r.shortcode}/`;
+
+/** Instagram's supported embed view — no scraping, no third-party script. */
+export const reelEmbedSrc = (r: Reel) =>
+  `https://www.instagram.com/reel/${r.shortcode}/embed`;
