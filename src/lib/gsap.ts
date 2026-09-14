@@ -15,17 +15,21 @@ export const DEBUG_MOTION = false;
 /**
  * Pin lengths, in pixels of scroll.
  *
- * These are deliberately short. A scrubbed pin costs the visitor real scrolling,
- * and the first version of this page spent ~5,700px on three pins — the story
- * read as slow because reaching the next beat took several flicks. Each act now
- * resolves in roughly one screen of travel. Tune the page's pace here, not in
- * the components.
+ * A scrubbed pin costs the visitor real scrolling, so these stay modest: the
+ * first version of this page spent ~5,700px on three pins and the story read as
+ * slow, because reaching the next beat took several flicks.
+ *
+ * They were then cut too far the other way — a single flick ran a whole act,
+ * and Act II has six beats to get through, so the sweep and the match went past
+ * before they could be read. These sit between the two: roughly a screen and a
+ * half per act, which is about one unhurried flick per beat. Tune the page's
+ * pace here, not in the components.
  */
 export const PIN = {
-  actOne: 620,
-  actTwo: 1050,
+  actOne: 900,
+  actTwo: 1650,
   /** Extra travel past the horizontal rail's own width. */
-  howItWorksTail: 0.1,
+  howItWorksTail: 0.35,
 } as const;
 
 /** Pinning is disabled below this width — see CLAUDE.md §5. */

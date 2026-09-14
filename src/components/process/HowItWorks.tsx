@@ -4,6 +4,7 @@ import { useRef } from "react";
 import {
   gsap,
   useGSAP,
+  ScrollTrigger,
   DEBUG_MOTION,
   PIN,
   PRIORITY,
@@ -50,7 +51,43 @@ export function HowItWorks() {
 
       mm.add(MOTION_CONDITIONS, (context) => {
         const { isDesktop, reduceMotion } = context.conditions as MotionConditions;
-        if (!isDesktop || reduceMotion || !track.current) return;
+        if (reduceMotion || !track.current) return;
+
+        if (!isDesktop) {
+          /*
+           * Below lg there is no pin and the rail is a touch-snap strip, so the
+           * horizontal scrub cannot run — and the section had no motion at all,
+           * arriving fully formed while every other section animated.
+           *
+           * The cards are all at the same height, so a per-card trigger would
+           * fire them together. One trigger with a stagger reads as a sequence
+           * and keeps the numbered order legible.
+           */
+          const head = root.current?.querySelector(".hiw-head");
+          const cards = track.current.querySelectorAll("article");
+
+          if (head) gsap.set(head, { opacity: 0, y: 18 });
+          gsap.set(cards, { opacity: 0, y: 26 });
+
+          ScrollTrigger.create({
+            trigger: root.current,
+            start: "top 72%",
+            once: true,
+            markers: DEBUG_MOTION,
+            onEnter: () => {
+              if (head) gsap.to(head, { opacity: 1, y: 0, duration: 0.5 });
+              gsap.to(cards, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.09,
+                ease: "power3.out",
+                delay: 0.12,
+              });
+            },
+          });
+          return;
+        }
 
         const distance = () => track.current!.scrollWidth - window.innerWidth;
 
@@ -83,7 +120,7 @@ export function HowItWorks() {
       className="relative overflow-hidden bg-paper-2 py-16 md:py-24 lg:h-screen lg:pb-10 lg:pt-28"
     >
       <div className="flex h-full flex-col justify-center">
-        <div className="shell shrink-0">
+        <div className="hiw-head shell shrink-0">
           <p className="label-mono flex items-center gap-2.5 text-green-deep">
             <span aria-hidden className="inline-block h-px w-7 bg-green" />
             How it works

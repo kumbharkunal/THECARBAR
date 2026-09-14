@@ -96,7 +96,13 @@ export function Hero() {
           In flow on mobile — behind the copy it collided with the eyebrow — and
           absolutely placed in the right half from md.
         */}
-        <div className="hero-lens pointer-events-none relative mx-auto mt-6 w-[78vw] max-w-[310px] md:absolute md:right-[-2%] md:top-1/2 md:mt-0 md:w-[46vw] md:max-w-[760px] md:-translate-y-1/2">
+        {/*
+          The mobile nudge centres the GLASS, not the artwork. LensMark's rim is
+          at cx 245 of a 600 viewBox, so the circle sits at 40.8% of the box and
+          the handle makes up the rest — centring the box alone left the circle
+          about 28px to the left. 9.17% is the difference between the two.
+        */}
+        <div className="hero-lens pointer-events-none relative mx-auto mt-6 w-[78vw] max-w-[310px] translate-x-[9.17%] md:absolute md:right-[-2%] md:top-1/2 md:mt-0 md:w-[46vw] md:max-w-[760px] md:translate-x-0 md:-translate-y-1/2">
           <HeroLens />
         </div>
 

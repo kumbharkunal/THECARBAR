@@ -4,6 +4,7 @@ import { useRef } from "react";
 import {
   gsap,
   useGSAP,
+  ScrollTrigger,
   DEBUG_MOTION,
   PIN,
   PRIORITY,
@@ -48,15 +49,78 @@ export function ActOne() {
         gsap.set(".a1-question", { opacity: 0, y: 28 });
         gsap.set(".a1-seller", { opacity: 0, y: 18 });
 
+        if (!isDesktop) {
+          /*
+           * Below lg there is no pin, so the old timeline scrubbed across the
+           * whole section. Two things went wrong with that.
+           *
+           * The counter ran against section progress, so 0→4 had finished
+           * before the readout was ever on screen — the animation worked and
+           * nobody could see it.
+           *
+           * And `.a1-question` only faded in near the end of that scrub, while
+           * always reserving its ~180px of column. The visitor got a long empty
+           * band between the body copy and the requirement card.
+           *
+           * Each beat now fires when its own element reaches the viewport, so
+           * it plays where it can be seen and the copy fills its own space.
+           */
+          const q = (sel: string) => root.current?.querySelector<HTMLElement>(sel) ?? null;
+          const seller = q(".a1-seller");
+          const readout = q(".a1-readout");
+          const question = q(".a1-question");
+
+          const onEnter = (
+            trigger: Element | null,
+            start: string,
+            run: () => void,
+          ) => {
+            if (!trigger) return;
+            ScrollTrigger.create({
+              trigger,
+              start,
+              once: true,
+              onEnter: run,
+              markers: DEBUG_MOTION,
+            });
+          };
+
+          onEnter(seller, "top 88%", () => {
+            gsap
+              .timeline()
+              .to(".a1-link", { scaleY: 1, duration: 0.5, ease: "power2.inOut" })
+              .to(".a1-seller", { opacity: 1, y: 0, duration: 0.5 }, "-=0.25")
+              .to(".a1-lens", { opacity: 1, scale: 1, duration: 0.6 }, "-=0.35");
+          });
+
+          onEnter(readout, "top 85%", () => {
+            gsap.to(".a1-readout", { opacity: 1, y: 0, duration: 0.45 });
+            gsap.to(months, {
+              value: 4,
+              duration: 1.2,
+              ease: "power1.inOut",
+              onUpdate: () => {
+                if (monthsEl) monthsEl.textContent = String(Math.round(months.value));
+              },
+            });
+          });
+
+          // Fires as the line first clears the bottom edge, so the column is
+          // never a blank band waiting on a beat that has not run yet.
+          onEnter(question, "top 98%", () => {
+            gsap.to(".a1-question", { opacity: 1, y: 0, duration: 0.6 });
+          });
+          return;
+        }
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: root.current,
             start: "top top",
-            end: isDesktop ? `+=${PIN.actOne}` : "bottom bottom",
+            end: `+=${PIN.actOne}`,
             scrub: 0.3,
-            pin: isDesktop,
-            pinSpacing: isDesktop,
-            anticipatePin: isDesktop ? 1 : 0,
+            pin: true,
+            anticipatePin: 1,
             refreshPriority: PRIORITY.actOne,
             markers: DEBUG_MOTION,
           },
@@ -81,18 +145,10 @@ export function ActOne() {
             "-=0.35",
           )
           .to({}, { duration: 0.5 })
-          // State 3: the frame pulls back and the question lands.
-          // Desktop only: the stage recedes so the question takes the frame.
-          // Stacked on mobile there is nothing to hand focus to, and fading it
-          // would leave the 4-MONTHS readout unreadable.
+          // State 3: the frame pulls back so the question takes the frame.
           .to(
             ".a1-stage",
-            {
-              opacity: isDesktop ? 0.32 : 1,
-              scale: isDesktop ? 0.94 : 1,
-              duration: 0.8,
-              ease: "power2.inOut",
-            },
+            { opacity: 0.32, scale: 0.94, duration: 0.8, ease: "power2.inOut" },
             "wide",
           )
           .to(".a1-question", { opacity: 1, y: 0, duration: 0.8 }, "wide+=0.15")

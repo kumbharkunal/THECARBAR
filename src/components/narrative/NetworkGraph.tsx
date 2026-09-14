@@ -316,6 +316,25 @@ export function NetworkGraphMobile({ className }: { className?: string }) {
         </text>
       </g>
 
+      {/*
+        The lens, drawn about the origin so GSAP can move it with x/y alone.
+        Below lg the desktop constellation is replaced by this diagram, and
+        without a magnifier the searching beat had nothing to show.
+      */}
+      <g className="m-lens" opacity="0">
+        <circle r="30" fill="#45a117" fillOpacity="0.08" />
+        <circle r="30" fill="none" stroke="#45a117" strokeWidth="2" />
+        <line
+          x1="21"
+          y1="21"
+          x2="41"
+          y2="41"
+          stroke="#45a117"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+      </g>
+
       {MOBILE_SELLERS.map((s) => (
         <g key={s.id} className="m-node" data-node={s.id}>
           <circle

@@ -82,3 +82,18 @@ export const MOBILE_SELLERS = [
 
 export const MOBILE_BUYER = { x: 180, y: 58 } as const;
 export const MOBILE_HUB = { x: 180, y: 160 } as const;
+
+/**
+ * Where the lens travels on a phone, ending on the match.
+ *
+ * The desktop sweep reads across a wide constellation; this one walks the
+ * vertical diagram instead, so the same "we go and look" beat survives on a
+ * narrow screen rather than the section sitting still.
+ */
+export const MOBILE_SWEEP = [
+  { x: 118, y: 250, r: 34 },
+  { x: 232, y: 250, r: 34 },
+  { x: 60, y: 330, r: 34 },
+  { x: 160, y: 392, r: 34 },
+  { x: 262, y: 330, r: 40 },
+] as const;

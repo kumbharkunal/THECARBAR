@@ -11,7 +11,13 @@ import {
   MOTION_CONDITIONS,
   type MotionConditions,
 } from "@/lib/gsap";
-import { MATCH_NODE, SELLERS, SWEEP } from "@/lib/network";
+import {
+  MATCH_NODE,
+  MOBILE_SELLERS,
+  MOBILE_SWEEP,
+  SELLERS,
+  SWEEP,
+} from "@/lib/network";
 import { NetworkGraph, NetworkGraphMobile } from "./NetworkGraph";
 
 /** States 4–9. Each caption is a real heading in the DOM, not SVG text. */
@@ -117,6 +123,57 @@ export function ActTwo() {
                 { opacity: 1, scale: 1, duration: 0.45, stagger: 0.07 },
                 "-=0.25",
               );
+
+            // Then the lens goes looking, city by city, and settles on the
+            // match — the beat the phone was missing entirely.
+            const mLens = scope.querySelector(".net-mobile .m-lens");
+            if (mLens) {
+              const first = MOBILE_SWEEP[0];
+              gsap.set(mLens, {
+                x: first.x,
+                y: first.y,
+                scale: 0,
+                transformOrigin: "0px 0px",
+              });
+
+              const sweep = gsap.timeline({
+                scrollTrigger: {
+                  trigger: graph,
+                  start: "top 62%",
+                  once: true,
+                  markers: DEBUG_MOTION,
+                },
+              });
+
+              sweep.to(mLens, { opacity: 1, scale: 1, duration: 0.45 });
+
+              MOBILE_SWEEP.slice(1).forEach((point, i) => {
+                const node = scope.querySelector(
+                  `.net-mobile .m-node[data-node="${MOBILE_SELLERS[i + 1].id}"]`,
+                );
+                sweep.to(mLens, {
+                  x: point.x,
+                  y: point.y,
+                  duration: 0.55,
+                  ease: "power1.inOut",
+                });
+                if (node) {
+                  sweep.to(node, { scale: 1.18, duration: 0.2 }, "<").to(
+                    node,
+                    { scale: 1, duration: 0.25 },
+                    ">-0.1",
+                  );
+                }
+              });
+
+              // Held on the match rather than dismissed, so the phone ends on
+              // the same image the desktop does.
+              sweep.to(mLens, { scale: 1.12, duration: 0.3 }).to(
+                mLens,
+                { opacity: 0.55, duration: 0.4 },
+                "+=0.2",
+              );
+            }
           }
 
           // Beats, match card and the closing chain each arrive on entry.
@@ -395,15 +452,15 @@ export function ActTwo() {
           so everything the visitor could actually see sat half that below the
           middle of the screen for the whole act.
         */}
-        <div className="a2-chain mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-x-3 gap-y-2.5 sm:gap-x-4 lg:absolute lg:inset-x-0 lg:bottom-[clamp(1.25rem,3.5vh,2.5rem)] lg:mt-0">
+        <div className="a2-chain mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-x-1.5 gap-y-2.5 sm:gap-x-4 lg:absolute lg:inset-x-0 lg:bottom-[clamp(1.25rem,3.5vh,2.5rem)] lg:mt-0">
           {["You", "THE CAR-BAR", "Authorised seller"].flatMap((node, i) => {
             const pill = (
               <span
                 key={node}
                 className={
                   i === 1
-                    ? "rounded-full bg-green px-4 py-2.5 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-ink sm:text-[0.7rem] sm:tracking-[0.14em]"
-                    : "rounded-full border border-line bg-paper px-4 py-2.5 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-ink sm:text-[0.7rem] sm:tracking-[0.14em]"
+                    ? "whitespace-nowrap rounded-full bg-green px-2.5 py-2 font-mono text-[0.56rem] uppercase tracking-[0.04em] text-ink sm:px-4 sm:py-2.5 sm:text-[0.7rem] sm:tracking-[0.14em]"
+                    : "whitespace-nowrap rounded-full border border-line bg-paper px-2.5 py-2 font-mono text-[0.56rem] uppercase tracking-[0.04em] text-ink sm:px-4 sm:py-2.5 sm:text-[0.7rem] sm:tracking-[0.14em]"
                 }
               >
                 {node}
@@ -415,7 +472,7 @@ export function ActTwo() {
                   <span
                     key={`${node}-arrow`}
                     aria-hidden
-                    className="text-green-deep"
+                    className="shrink-0 text-[0.7rem] text-green-deep sm:text-base"
                   >
                     →
                   </span>,
