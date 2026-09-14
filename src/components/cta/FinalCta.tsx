@@ -26,9 +26,16 @@ export function FinalCta() {
         {
           animate: "(prefers-reduced-motion: no-preference)",
           reduce: "(prefers-reduced-motion: reduce)",
+          isNarrow: "(max-width: 767px)",
         },
         (context) => {
-          const { reduce } = context.conditions as { reduce: boolean };
+          const { reduce, isNarrow } = context.conditions as {
+            reduce: boolean;
+            isNarrow: boolean;
+          };
+          // A 2.9x entry is ~950px wide on a phone, which overflows the viewport
+          // and triggers shrink-to-fit. Keep the approach modest on narrow screens.
+          const ENTRY_SCALE = isNarrow ? 1.6 : 2.9;
 
           // GSAP writes its own transform matrix, which overwrites Tailwind's
           // -translate-x-1/2/-translate-y-1/2. So the centring lives HERE, in the
@@ -45,9 +52,9 @@ export function FinalCta() {
           // It arrives from up-left, oversized, still "searching", and settles.
           gsap.set(".cta-lens", {
             opacity: 0,
-            scale: 2.9,
-            xPercent: REST.xPercent - 26,
-            yPercent: REST.yPercent - 34,
+            scale: ENTRY_SCALE,
+            xPercent: REST.xPercent - (isNarrow ? 12 : 26),
+            yPercent: REST.yPercent - (isNarrow ? 18 : 34),
           });
 
           gsap.to(".cta-lens", {

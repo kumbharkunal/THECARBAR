@@ -43,6 +43,7 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    overflow-x: clip;
     /* Firefox */
     scrollbar-width: thin;
     scrollbar-color: var(--color-green) var(--color-paper-2);
@@ -213,6 +214,16 @@
 @utility rail-scroll {
   scrollbar-width: none;
   -ms-overflow-style: none;
+
+  /*
+   * `overflow-x: auto` alone let a rail's scrollable width leak into the
+   * document's layout overflow. Harmless on desktop, but on a phone Chrome then
+   * widens the layout viewport to fit it (shrink-to-fit) — which pushed every
+   * fixed element, the nav pill included, far to the right. Paint containment
+   * keeps the rail's overflow its own business.
+   */
+  contain: paint;
+
   &::-webkit-scrollbar {
     display: none;
   }

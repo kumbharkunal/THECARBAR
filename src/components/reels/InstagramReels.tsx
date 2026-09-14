@@ -50,7 +50,7 @@ export function InstagramReels() {
           {REELS.map((reel) => (
             <figure
             key={reel.shortcode}
-            className="lift flex w-[min(82vw,330px)] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-line bg-white transition-[box-shadow,border-color] duration-500 hover:border-green-line hover:lift-lg"
+            className="lift flex w-[17.5rem] sm:w-[20.625rem] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-line bg-white transition-[box-shadow,border-color] duration-500 hover:border-green-line hover:lift-lg"
           >
             <iframe
               src={reelEmbedSrc(reel)}

@@ -106,18 +106,18 @@ export function HeroLens({ className }: { className?: string }) {
               fill
               priority={i === 0}
               sizes="(max-width: 768px) 60vw, 34vw"
-              className="scale-[0.86] object-contain"
+              className="scale-[0.78] object-contain sm:scale-[0.84]"
             />
           </div>
         ))}
 
         {/* Model name, so the sequence reads as a search rather than a slideshow. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-[14%] flex justify-center">
+        <div className="pointer-events-none absolute inset-x-[6%] bottom-[11%] flex justify-center">
           <div className="relative h-6">
             {HERO_CARS.map((car) => (
               <span
                 key={car.image}
-                className="hero-car-label absolute left-1/2 top-0 -translate-x-1/2 whitespace-nowrap rounded-full border border-green-line bg-white/85 px-3 py-1 font-mono text-[0.66rem] uppercase tracking-[0.1em] text-ink-soft backdrop-blur-sm sm:text-[0.68rem]"
+                className="hero-car-label absolute left-1/2 top-0 max-w-full -translate-x-1/2 truncate rounded-full border border-green-line bg-white/90 px-2.5 py-1 font-mono text-[0.58rem] uppercase leading-4 tracking-[0.06em] text-ink-soft backdrop-blur-sm sm:px-3 sm:text-[0.66rem] sm:tracking-[0.1em]"
               >
                 {car.name}
               </span>

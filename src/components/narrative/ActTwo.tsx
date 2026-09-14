@@ -4,6 +4,7 @@ import { useRef } from "react";
 import {
   gsap,
   useGSAP,
+  ScrollTrigger,
   DEBUG_MOTION,
   PIN,
   PRIORITY,
@@ -69,11 +70,71 @@ export function ActTwo() {
           scope.querySelector<HTMLElement>(`[data-beat="${b.id}"]`),
         );
 
-        if (reduceMotion || !isDesktop) {
-          // Captions stack and read as a list; the diagram is shown complete.
+        if (reduceMotion) {
+          // Everything at its final legible state; no reveals, no sweep.
           gsap.set(beatEls.filter(Boolean), { opacity: 1, position: "relative" });
           gsap.set(scope.querySelectorAll(".net-desktop .net-node-label"), {
             opacity: 1,
+          });
+          return;
+        }
+
+        if (!isDesktop) {
+          // No pinning below lg, but the section should still feel alive: the
+          // network assembles as it comes into view, then the beats arrive as a
+          // sequence. Without this the whole act sat static on a phone.
+          gsap.set(scope.querySelectorAll(".net-desktop .net-node-label"), {
+            opacity: 1,
+          });
+
+          const mSpine = scope.querySelector(".net-mobile .m-spine");
+          const mHub = scope.querySelector(".net-mobile .m-hub");
+          const mBuyer = scope.querySelector(".net-mobile .m-buyer");
+          const mPaths = scope.querySelectorAll(".net-mobile .m-path");
+          const mNodes = scope.querySelectorAll(".net-mobile .m-node");
+          const graph = scope.querySelector(".net-mobile");
+
+          if (graph) {
+            gsap.set([mBuyer, mSpine, mHub], { opacity: 0 });
+            gsap.set(mPaths, { opacity: 0 });
+            gsap.set(mNodes, { opacity: 0, scale: 0.5, transformOrigin: "center" });
+
+            gsap
+              .timeline({
+                scrollTrigger: {
+                  trigger: graph,
+                  start: "top 78%",
+                  once: true,
+                  markers: DEBUG_MOTION,
+                },
+              })
+              .to(mBuyer, { opacity: 1, duration: 0.4 })
+              .to(mSpine, { opacity: 1, duration: 0.4 }, "-=0.2")
+              .to(mHub, { opacity: 1, duration: 0.45 }, "-=0.15")
+              .to(mPaths, { opacity: 1, duration: 0.4, stagger: 0.06 }, "-=0.1")
+              .to(
+                mNodes,
+                { opacity: 1, scale: 1, duration: 0.45, stagger: 0.07 },
+                "-=0.25",
+              );
+          }
+
+          // Beats, match card and the closing chain each arrive on entry.
+          const items = [
+            ...beatEls.filter(Boolean),
+            scope.querySelector(".a2-match-card"),
+            scope.querySelector(".a2-chain"),
+          ].filter(Boolean) as Element[];
+
+          items.forEach((el) => {
+            gsap.set(el, { opacity: 0, y: 20, position: "relative" });
+            ScrollTrigger.create({
+              trigger: el,
+              start: "top 88%",
+              once: true,
+              onEnter: () =>
+                gsap.to(el, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }),
+            });
           });
           return;
         }

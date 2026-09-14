@@ -96,7 +96,7 @@ export function Hero() {
           In flow on mobile — behind the copy it collided with the eyebrow — and
           absolutely placed in the right half from md.
         */}
-        <div className="hero-lens pointer-events-none relative mx-auto mt-6 w-[58vw] max-w-[240px] md:absolute md:right-[-2%] md:top-1/2 md:mt-0 md:w-[46vw] md:max-w-[760px] md:-translate-y-1/2">
+        <div className="hero-lens pointer-events-none relative mx-auto mt-6 w-[78vw] max-w-[310px] md:absolute md:right-[-2%] md:top-1/2 md:mt-0 md:w-[46vw] md:max-w-[760px] md:-translate-y-1/2">
           <HeroLens />
         </div>
 
