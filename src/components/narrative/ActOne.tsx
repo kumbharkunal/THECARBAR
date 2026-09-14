@@ -117,7 +117,7 @@ export function ActOne() {
 
           <h2
             id="act-one-title"
-            className="display-lg mt-5 max-w-[13ch] uppercase text-ink md:mt-6"
+            className="display-lg mt-5 uppercase text-ink md:mt-6 lg:max-w-[13ch]"
           >
             Tired of hearing &ldquo;waiting period&rdquo;?
           </h2>

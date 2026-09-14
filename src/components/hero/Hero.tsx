@@ -70,7 +70,7 @@ export function Hero() {
           to availability.
         </p>
 
-        <div className="hero-actions mt-7 flex flex-wrap items-center gap-3 md:mt-8">
+        <div className="hero-actions mt-7 flex flex-wrap items-center justify-center gap-3 sm:justify-start md:mt-8">
           <Button
             href={FIND_MY_CAR_HREF}
             external

@@ -227,10 +227,10 @@ export function Header() {
           // were racing and the delayed one won, so the panel stayed hidden for the
           // whole sweep and then popped in — which read as the menu being slow.
           // `inert` already blocks focus and interaction, so opacity is enough.
-          "transition-[clip-path,opacity] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+          "transition-[clip-path] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
           open
-            ? "opacity-100 [clip-path:inset(0_0_0%_0)]"
-            : "pointer-events-none opacity-0 [clip-path:inset(0_0_100%_0)]",
+            ? "[clip-path:inset(0_0_0%_0)]"
+            : "pointer-events-none [clip-path:inset(0_0_100%_0)]",
         )}
       >
         <nav aria-label="Primary, expanded">
@@ -240,7 +240,7 @@ export function Header() {
                 <a
                   href={link.href}
                   onClick={close}
-                  style={{ transitionDelay: open ? `${0.09 + i * 0.028}s` : "0s" }}
+                  style={{ transitionDelay: open ? `${0.09 + i * 0.028}s` : `${(NAV_LINKS.length - 1 - i) * 0.028}s` }}
                   className={cn(
                     "flex min-h-[2.75rem] items-baseline gap-4 py-1.5 font-display text-[clamp(2.1rem,1rem+6.5vw,3.2rem)] font-semibold leading-[1.04] tracking-tight text-ink",
                     "[transition:clip-path_300ms_cubic-bezier(0.22,1,0.36,1),transform_300ms_cubic-bezier(0.22,1,0.36,1)]",
@@ -260,7 +260,7 @@ export function Header() {
         </nav>
 
         <div
-          style={{ transitionDelay: open ? "0.22s" : "0s" }}
+          style={{ transitionDelay: open ? "0.22s" : `${NAV_LINKS.length * 0.028}s` }}
           className={cn(
             "grid justify-items-start gap-3 border-t border-green-line pt-6",
             "[transition:clip-path_300ms_cubic-bezier(0.22,1,0.36,1),transform_300ms_cubic-bezier(0.22,1,0.36,1)]",
