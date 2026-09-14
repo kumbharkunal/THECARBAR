@@ -29,10 +29,13 @@ Confirm the brand green. Sampled from the supplied logo as **`#45A117`**, set in
 `src/data/site.ts` → `CONTACT`
 
 ```ts
-phoneE164: "919000000000",   // PLACEHOLDER
-phoneDisplay: "+91 90000 00000",
-isPlaceholder: true,          // set false once real
+phoneE164: "918087310369",    // supplied by the client
+phoneDisplay: "+91 80873 10369",
+isPlaceholder: false,
 ```
+
+**Done** — this drives the WhatsApp deep link, the Call button, the mobile menu and
+every FIND MY CAR button.
 
 This single number drives the WhatsApp deep link, the Call button, the mobile menu,
 and every **FIND MY CAR** button on the page.
@@ -143,7 +146,7 @@ drop screenshots into `public/brand/reference/`.
 
 ## 10. Before launch — checklist
 
-- [ ] Real phone number in `site.ts`, `isPlaceholder: false`
+- [x] Real phone number in `site.ts` — `+91 80873 10369`
 - [ ] Production domain in `SITE.url`
 - [ ] `logo.svg` (vector replacement for the 521 KB PNG)
 - [ ] Real photography replacing every `null` image

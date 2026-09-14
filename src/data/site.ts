@@ -13,11 +13,11 @@ export const SITE = {
   instagramHandle: "@thecarbar.in",
 } as const;
 
-/** PLACEHOLDER — replace with the real number in E.164 (no spaces, no +). */
+/** Client-supplied. E.164 (no spaces, no +) drives the WhatsApp and tel: links. */
 export const CONTACT = {
-  phoneE164: "919000000000",
-  phoneDisplay: "+91 90000 00000",
-  isPlaceholder: true,
+  phoneE164: "918087310369",
+  phoneDisplay: "+91 80873 10369",
+  isPlaceholder: false,
 } as const;
 
 const WHATSAPP_INTRO =

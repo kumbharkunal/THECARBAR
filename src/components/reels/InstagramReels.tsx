@@ -26,7 +26,7 @@ export function InstagramReels() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => track("reel_click", { source: "header" })}
-            className="inline-flex min-h-[48px] items-center gap-2.5 rounded-full border border-green-line bg-green-soft px-5 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-green-deep transition-colors duration-300 hover:border-green-deep hover:bg-green-deep hover:text-white"
+            className="inline-flex min-h-[48px] items-center gap-2.5 rounded-full border border-green-line bg-white px-5 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-green-deep transition-colors duration-300 hover:border-green hover:bg-green-soft"
           >
             <InstagramIcon size={16} />
             {SITE.instagramHandle}
@@ -72,7 +72,7 @@ export function InstagramReels() {
                 <span className="min-w-0 truncate font-mono text-[0.62rem] uppercase tracking-[0.1em] text-ink sm:text-[0.66rem]">
                   {reel.caption}
                 </span>
-                <InstagramIcon size={14} className="shrink-0 text-green-deep" />
+                <InstagramIcon size={15} className="shrink-0" />
               </span>
             </span>
           </a>
