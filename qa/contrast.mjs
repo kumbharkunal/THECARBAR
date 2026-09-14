@@ -9,7 +9,7 @@ import { PNG } from "pngjs";
  * over images. Reading the actual framebuffer sidesteps all of that.
  */
 
-const BASE = "http://localhost:3111";
+const BASE = process.env.BASE ?? "http://localhost:3111";
 const CHROME = "C:/Program Files/Google/Chrome/Application/chrome.exe";
 
 const srgb = (c) => {

@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 
-const BASE = "http://localhost:3111";
+const BASE = process.env.BASE ?? "http://localhost:3111";
 const CHROME = "C:/Program Files/Google/Chrome/Application/chrome.exe";
 const browser = await chromium.launch({ executablePath: CHROME });
 

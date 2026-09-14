@@ -74,15 +74,60 @@ the page is now white and green and dark images would read as holes in it.
 If generated images are used they are illustrative only and must never be captioned
 as real customers or deliveries.
 
-## 4. Instagram reels
+## 4. Instagram reels — scraped every three days
 
-`src/data/reels.ts` — the five supplied reels, embedded via Instagram's official
-`/embed` endpoint. Only the shortcode is stored; the permalink and embed URL derive
-from it.
+The section now follows [@thecarbar.in](https://www.instagram.com/thecarbar.in/)
+on its own. **This reverses the brief's "never scraped" rule**, at the client's
+instruction, because the client holds the Instagram login and the official Meta
+API needs an account-holder to authorise an app. Scraping is contrary to
+Instagram's Terms of Use — see "If you want to stop scraping" below.
 
-To add or swap a reel, change its shortcode in `REELS`.
+**How it works**
 
-Instagram is never scraped and no live embed is depended on, per the brief.
+| | |
+|---|---|
+| Source | Apify Actor `apify/instagram-reel-scraper` (`xMc5Ga1oCONPmWJIa`) |
+| Cadence | at most once every 3 days — `REELS_REVALIDATE` in `src/lib/instagram.ts` |
+| Cache | Next's `unstable_cache`, which survives redeploys, so deploying often costs nothing extra |
+| Page | `src/app/page.tsx` re-renders every 6 h and reads the cached scrape; it does not start a run |
+| Cost | ~$0.03 a run, so ~$0.31/month against Apify's free $5 credit |
+
+**Required environment variable**
+
+`APIFY_TOKEN` — Apify Console → Settings → API & Integrations. Needed in
+`.env.local` for local runs **and in Vercel** (Settings → Environment Variables),
+because the scrape happens server-side at render.
+
+It is read only in a Server Component, so it never reaches the browser. Without
+it the section renders `FALLBACK_REELS` and logs one line — no crash, no blank.
+
+**What is hand-maintained** — `src/data/reels.ts`
+
+- `CAPTION_OVERRIDES` — wording that beats the real Instagram caption, per
+  shortcode. Otherwise the caption's first line is used with hashtags, mentions
+  and links stripped, capped at 60 characters; if nothing usable survives, the
+  card shows no caption rather than an invented one.
+- `FALLBACK_REELS` — the five client-supplied reels. These are what render with
+  no token, on a failed scrape, and in any preview without the env var.
+- `REEL_LIMIT` — how many reels to request.
+
+**Covers.** Reel cover images are hotlinked from Instagram's CDN through
+`next/image` (`next.config.ts` → `images.remotePatterns`). Those URLs are signed
+and expire, so `minimumCacheTTL` is set to 31 days: once Next has optimised a
+cover it serves its own copy long after the original link dies. A cover that
+cannot be resolved falls through to `MediaFrame`'s composition.
+
+**Checking a run.** `node qa/reels-probe.mjs` prints one raw item's fields and
+says which key the cover-image resolver picked — run it if covers stop appearing,
+since the Actor renames fields between builds.
+`BASE=… node qa/reel-check.mjs` verifies every reel the page is showing still
+resolves on Instagram.
+
+**If you want to stop scraping.** Switch to the official *Instagram API with
+Instagram Login*: free, no credit cap, Meta-sanctioned. It needs `@thecarbar.in`
+converted to a Business/Creator account and a one-time Meta app authorisation by
+whoever holds the login. Only `scrapeReels()` in `src/lib/instagram.ts` changes;
+the cache, the fallback and the card stay as they are.
 
 ## 5. Testimonials — consent required
 
@@ -153,7 +198,7 @@ drop screenshots into `public/brand/reference/`.
 - [ ] Production domain in `SITE.url`
 - [ ] `logo.svg` (vector replacement for the 521 KB PNG)
 - [ ] Real photography replacing every `null` image
-- [ ] Real reels with thumbnails and permalinks
+- [x] Real reels — scraped from @thecarbar.in (needs `APIFY_TOKEN` set in Vercel)
 - [ ] Real consented testimonial wording (current copy is written, not quoted)
 - [ ] Consented customer story photography
 - [ ] Analytics provider connected

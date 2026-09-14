@@ -14,6 +14,16 @@ import { FinalCta } from "@/components/cta/FinalCta";
 import { MotionBoot } from "@/components/ui/MotionBoot";
 import { SiteLoader } from "@/components/ui/SiteLoader";
 
+/**
+ * The page is still static; it just has a shelf life now.
+ *
+ * The reels are scraped at most once every three days (src/lib/instagram.ts).
+ * Re-rendering more often than that is free — a regeneration reads the cached
+ * scrape rather than starting a new one — and it stops a fresh reel waiting up
+ * to three extra days for the HTML itself to catch up.
+ */
+export const revalidate = 21600; // six hours
+
 export default function Home() {
   return (
     <>

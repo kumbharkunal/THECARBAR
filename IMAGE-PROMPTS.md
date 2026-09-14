@@ -120,28 +120,20 @@ Create a bright premium automotive photograph: a set of car keys and a closed do
 
 ---
 
-# 3 · Instagram reels (5 thumbnails) — do NOT generate these
+# 3 · Instagram reels — nothing to supply
 
-**Used by** `src/components/reels/InstagramReels.tsx` · **data** `src/data/reels.ts`
-**Dimensions** 1080 × 1920 (9:16) · **Format** `.webp`
+**Used by** `src/components/reels/ReelsRail.tsx` · **data** `src/data/reels.ts`
 
-The section heading is *"See THE CAR-BAR in action"* and each card links to Instagram.
-A generated thumbnail there would misrepresent a real post, so these must be **actual
-frames from your own reels** at [@thecarbar.in](https://www.instagram.com/thecarbar.in/).
+Reel covers are no longer assets you provide. The section scrapes
+[@thecarbar.in](https://www.instagram.com/thecarbar.in/) every three days and
+uses each reel's own cover image straight from Instagram — see `ASSETS.md` §4.
 
-For each of the five: take a clean frame, export at 1080 × 1920 `.webp`, then fill in:
+Nothing here should ever be generated: a made-up frame under a heading that says
+*"See THE CAR-BAR in action"* would misrepresent a real post.
 
-```ts
-{
-  id: "reel-1",
-  url: "https://www.instagram.com/reel/YOUR_REEL_ID/",
-  thumbnail: "/media/reels/carbar-reel-01.webp",
-  caption: "Delivery day",
-  isPlaceholder: false,   // <- the placeholder notice disappears on its own
-}
-```
-
-Filenames the code expects: `carbar-reel-01.webp` … `carbar-reel-05.webp`
+The one thing worth maintaining by hand is the wording. `CAPTION_OVERRIDES` in
+`src/data/reels.ts` lets you replace a reel's Instagram caption with a line
+written for the page, keyed by shortcode.
 
 ---
 
@@ -159,7 +151,7 @@ Filenames the code expects: `carbar-reel-01.webp` … `carbar-reel-05.webp`
 | 8 | `carbar-story-01.webp` | 1600 × 1000 | 16:10 | `stories.ts` | Yes — no faces |
 | 9 | `carbar-story-02.webp` | 1200 × 1200 | 1:1 | `stories.ts` | Yes — no faces |
 | 10 | `carbar-story-03.webp` | 1200 × 1200 | 1:1 | `stories.ts` | Yes — no faces |
-| 11–15 | `carbar-reel-01…05.webp` | 1080 × 1920 | 9:16 | `reels.ts` | **No — use real reels** |
+| — | *(none)* | — | 9:16 | `reels.ts` | **No — covers come from the scrape** |
 
 If ChatGPT returns a PNG rather than WebP, convert it — [squoosh.app](https://squoosh.app)
 does it in the browser. Keep each car image under ~250 KB; `next/image` resizes and
