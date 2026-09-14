@@ -85,6 +85,12 @@ function coverUrl(item: Item): string | null {
  */
 const MAX_INLINE_BYTES = 10_000_000;
 
+/**
+ * Ask for more reels than the rail shows. Roughly a quarter come back too large
+ * to play, and the surplus keeps the rail full rather than short.
+ */
+const SCRAPE_LIMIT = 20;
+
 /** Total size via a one-byte range — cheaper and likelier to answer than HEAD. */
 async function videoBytes(url: string): Promise<number | null> {
   try {
@@ -178,7 +184,7 @@ async function scrapeReels(): Promise<Reel[]> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       username: [profileHandle()],
-      resultsLimit: REEL_LIMIT,
+      resultsLimit: SCRAPE_LIMIT,
       skipPinnedPosts: false,
       skipTrialReels: true,
       // Each of these is a separately billed add-on event, and the page shows
@@ -210,8 +216,14 @@ async function scrapeReels(): Promise<Reel[]> {
   // Newest first, for reels that carry a timestamp.
   reels.sort((a, b) => (b.postedAt ?? "").localeCompare(a.postedAt ?? ""));
 
-  // Sized last, so only the reels actually on the page are measured.
-  return keepPlayable(reels.slice(0, REEL_LIMIT));
+  // Size the whole catch, then keep the newest REEL_LIMIT that can actually
+  // play. Dropping an oversized reel then costs us reach into the back
+  // catalogue rather than leaving a dead card in the rail.
+  const sized = await keepPlayable(reels);
+  const playable = sized.filter((r) => r.video);
+
+  // If every single one was oversized, a rail of covers still beats no rail.
+  return (playable.length ? playable : sized).slice(0, REEL_LIMIT);
 }
 
 /**
@@ -222,7 +234,7 @@ async function scrapeReels(): Promise<Reel[]> {
  * `video` arrived this way: every reel came back with no mp4 and the rail
  * rendered no players at all.
  */
-const SHAPE = "v3-playable";
+const SHAPE = "v4-playable-only";
 
 const cachedScrape = unstable_cache(scrapeReels, ["instagram-reels", ACTOR, SHAPE], {
   revalidate: REELS_REVALIDATE,

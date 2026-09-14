@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Pause, Play, Volume2, VolumeX } from "lucide-react";
-import { reelPermalink, reelVideoSrc, type RailReel } from "@/data/reels";
+import {
+  REELS_INITIAL,
+  REELS_STEP,
+  reelPermalink,
+  reelVideoSrc,
+  type RailReel,
+} from "@/data/reels";
 import { SITE } from "@/data/site";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -23,7 +29,10 @@ import { InstagramIcon } from "@/components/ui/icons";
  * `h-[640px]`, and were the only focus-ring failures in the a11y audit.
  */
 export function ReelsRail({ reels }: { reels: RailReel[] }) {
-  const [active, setActive] = useState(0);
+  // The first reel is the one the visitor is shown, so it is the one that
+  // plays. Centring only takes over once they actually scroll the rail.
+  const [active, setActive] = useState(() => reels.findIndex((r) => r.hasVideo));
+  const [shown, setShown] = useState(() => Math.min(REELS_INITIAL, reels.length));
   const [muted, setMuted] = useState(true);
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
@@ -35,6 +44,7 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
   const railRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   const playing = !paused && !reduced && inView;
 
@@ -89,9 +99,9 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
       if (!frame) frame = requestAnimationFrame(measure);
     };
 
-    // Deferred, not called straight away: a synchronous setState in an effect
-    // cascades a second render before paint (react-hooks/set-state-in-effect).
-    schedule();
+    // Deliberately not measured on mount: that would hand the first play to
+    // whichever card the rail happens to centre — the second one on a desktop —
+    // instead of the first reel. Centring begins with the first real scroll.
     rail.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
     return () => {
@@ -100,6 +110,24 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
       if (frame) cancelAnimationFrame(frame);
     };
   }, [reels]);
+
+  // More cards as the rail approaches its end, rather than twelve on arrival.
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || shown >= reels.length) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown((n) => Math.min(n + REELS_STEP, reels.length));
+        }
+      },
+      // Against the rail itself, since this scrolls sideways; the margin gets
+      // the next batch mounted before the visitor reaches blank space.
+      { root: railRef.current, rootMargin: "0px 320px 0px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [shown, reels.length]);
 
   // One plays, the rest rewind. `play()` rejects when the browser declines
   // autoplay; that is a normal outcome, not an error worth surfacing.
@@ -204,7 +232,7 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
           ref={railRef}
           className="rail-scroll rail-inset flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 sm:gap-5"
         >
-          {reels.map((reel, i) => {
+          {reels.slice(0, shown).map((reel, i) => {
             const isActive = i === active;
             const isPlaying = isActive && playing && reel.hasVideo;
             // Held on the active card whether or not it is running, so pausing
@@ -356,6 +384,14 @@ export function ReelsRail({ reels }: { reels: RailReel[] }) {
               </article>
             );
           })}
+
+          {/*
+            Trip-wire for the next batch. It has width so the observer has
+            something to intersect, and it disappears once every reel is out.
+          */}
+          {shown < reels.length && (
+            <div ref={sentinelRef} aria-hidden className="w-px shrink-0" />
+          )}
         </div>
       </div>
     </section>

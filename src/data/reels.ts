@@ -50,6 +50,16 @@ export const reelVideoSrc = (shortcode: string) =>
 export const REEL_LIMIT = 12;
 
 /**
+ * Cards rendered before the visitor scrolls the rail, and how many more arrive
+ * each time they reach the end.
+ *
+ * Every card carries a cover and a video element, so mounting twelve up front
+ * costs markup and image requests for reels most visitors never scroll to.
+ */
+export const REELS_INITIAL = 5;
+export const REELS_STEP = 4;
+
+/**
  * Wording that beats the real caption, keyed by shortcode.
  *
  * Empty on purpose. The previous entries were written before anyone could see
