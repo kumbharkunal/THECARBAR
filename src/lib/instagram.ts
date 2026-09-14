@@ -74,6 +74,14 @@ function coverUrl(item: Item): string | null {
   return null;
 }
 
+/** The reel's mp4. Same CDN guard as the cover — anything else is not ours. */
+function videoUrl(item: Item): string | null {
+  const url = str(item.videoUrl) ?? str(item.video_url);
+  return url && /^https:\/\/[^/]*(cdninstagram\.com|fbcdn\.net)\//.test(url)
+    ? url
+    : null;
+}
+
 function shortcodeOf(item: Item): string | undefined {
   const direct = str(item.shortCode) ?? str(item.shortcode) ?? str(item.code);
   if (direct) return direct;
@@ -113,6 +121,7 @@ function normalise(item: Item): Reel | null {
     shortcode,
     caption: CAPTION_OVERRIDES[shortcode] ?? cleanCaption(str(item.caption)),
     thumbnail: coverUrl(item),
+    video: videoUrl(item),
     postedAt: str(item.timestamp) ?? str(item.takenAt),
   };
 }
@@ -164,7 +173,17 @@ async function scrapeReels(): Promise<Reel[]> {
   return reels.slice(0, REEL_LIMIT);
 }
 
-const cachedScrape = unstable_cache(scrapeReels, ["instagram-reels", ACTOR], {
+/**
+ * Bump when the shape of a cached Reel changes.
+ *
+ * The cache outlives deploys, which is the point of it — but that also means a
+ * release that adds a field would serve the old shape for up to three days.
+ * `video` arrived this way: every reel came back with no mp4 and the rail
+ * rendered no players at all.
+ */
+const SHAPE = "v2-video";
+
+const cachedScrape = unstable_cache(scrapeReels, ["instagram-reels", ACTOR, SHAPE], {
   revalidate: REELS_REVALIDATE,
   tags: ["instagram-reels"],
 });

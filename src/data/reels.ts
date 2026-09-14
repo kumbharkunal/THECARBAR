@@ -21,8 +21,30 @@ export type Reel = {
    * composition, so a missing cover looks deliberate instead of broken.
    */
   thumbnail?: string | null;
+  /**
+   * Instagram's signed mp4. Server-side only — it expires in about 34 hours,
+   * well inside the three-day cache, so the browser is handed `reelVideoSrc()`
+   * instead and the proxy resolves this at request time.
+   */
+  video?: string | null;
   postedAt?: string;
 };
+
+/**
+ * What the rail actually receives. The signed mp4 is deliberately absent: it
+ * would be serialised into the HTML payload for no reason, and it is stale
+ * within a day and a half.
+ */
+export type RailReel = {
+  shortcode: string;
+  caption?: string;
+  thumbnail?: string | null;
+  hasVideo: boolean;
+};
+
+/** Our stable URL for a reel's video. Constant while Instagram's rotates. */
+export const reelVideoSrc = (shortcode: string) =>
+  `/api/reel/${encodeURIComponent(shortcode)}/video`;
 
 /** How many reels to ask the scraper for. The rail scrolls, so this can grow. */
 export const REEL_LIMIT = 12;
