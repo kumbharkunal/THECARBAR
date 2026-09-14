@@ -29,14 +29,18 @@ export async function GET(
     return new Response(null, { status: 404 });
   }
 
-  // Forward Range so the browser can seek and start playing before the whole
-  // 9 MB has arrived. Without it the element waits for the full file.
-  const range = request.headers.get("range");
-
+  // Range is deliberately NOT forwarded.
+  //
+  // Vercel's CDN does not cache partial responses: a 206 is a MISS every time,
+  // measured. Browsers ask for video with Range, so honouring it meant every
+  // play went back to Instagram — and once the signature expired, to nothing.
+  // That is the exact failure this route exists to prevent.
+  //
+  // Always fetching the whole object returns a cacheable 200. Playback is still
+  // progressive, and a looping reel has no seek bar to lose.
   let upstream: Response;
   try {
     upstream = await fetch(reel.video, {
-      headers: range ? { Range: range } : undefined,
       signal: AbortSignal.timeout(20_000),
       cache: "no-store",
     });
@@ -57,13 +61,14 @@ export async function GET(
   const headers = new Headers({
     "Content-Type": upstream.headers.get("content-type") ?? "video/mp4",
     "Cache-Control": `public, max-age=3600, s-maxage=${EDGE_TTL}, stale-while-revalidate=${EDGE_TTL}`,
-    "Accept-Ranges": "bytes",
+    // Saying "none" stops the browser re-asking with a Range it cannot get.
+    "Accept-Ranges": "none",
   });
 
-  for (const h of ["content-length", "content-range", "etag"]) {
+  for (const h of ["content-length", "etag"]) {
     const v = upstream.headers.get(h);
     if (v) headers.set(h, v);
   }
 
-  return new Response(upstream.body, { status: upstream.status, headers });
+  return new Response(upstream.body, { status: 200, headers });
 }
